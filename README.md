@@ -1,6 +1,7 @@
 # lingLong Blog - Full-Stack Integrated Project
 [demo](https://juayohuang.top)
 > **A simple and elegant Astro blog system with a FastAPI backend management platform**
+> You need to switch to the 'integrity' branch to see the entire integration project, including the Chinese version of README.md.
 
 ![alt text](https://img.shields.io/badge/license-MIT-blue.svg)
 ![alt text](https://img.shields.io/badge/Astro-5.3-orange.svg)
