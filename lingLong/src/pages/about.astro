@@ -2,7 +2,7 @@
 import { getEntry, render } from "astro:content";
 import Main from "../layouts/MainLayout.astro";
 import Markdown from "../components/Markdown.astro";
-import CopyRight from "../components/misc/CopyRight.astro";
+// import CopyRight from "../components/misc/CopyRight.astro";
 
 const aboutPost = await getEntry("specs", "about");
 const { Content } = await render(aboutPost!);
@@ -22,7 +22,7 @@ const { title, subTitle, bannerImage, published } = Astro.props;
       <Markdown>
         <Content />
       </Markdown>
-      {published && title && <CopyRight title={title} published={published} />}
+      <!-- {published && title && <CopyRight title={title} published={published} />} -->
     </div>
   </div>
 </Main>
