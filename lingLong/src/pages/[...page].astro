@@ -38,7 +38,7 @@ const { page } = Astro.props;
             {/* 原来使用 category={entry.data.first_level_category} */}
             {/* 现在使用 first_level_category 和 second_level_category 分别传递 */}
             <PostCard
-              id={entry.id} 
+              id={entry.id}
               title={entry.data.title}
               published={entry.data.published}
               first_level_category={entry.data.first_level_category}
