@@ -25,14 +25,14 @@ const LingLongConfig: Configuration = {
       nameKey: I18nKeys.nav_bar_about,
       href: "/about",
     },
-    {
-      nameKey: I18nKeys.nav_bar_github,
-      href: "https://github.com/JuyaoHuang",
-    },
-    {
-      nameKey: I18nKeys.nav_bar_friends,
-      href: "/friends",
-    },
+    // {
+    //   nameKey: I18nKeys.nav_bar_github,
+    //   href: "https://github.com/JuyaoHuang",
+    // },
+    // {
+    //   nameKey: I18nKeys.nav_bar_friends,
+    //   href: "/friends",
+    // },
   ],
   username: "わかば むつみ",
   sign: "私の唯一の命は私にかかっている",//我这仅此一次的人生只取决我 私の唯一の命は私にかかっている
