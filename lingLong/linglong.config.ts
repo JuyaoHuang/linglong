@@ -34,8 +34,8 @@ const LingLongConfig: Configuration = {
     //   href: "/friends",
     // },
   ],
-  username: "わかば むつみ",
-  sign: "私の唯一の命は私にかかっている",//我这仅此一次的人生只取决我 私の唯一の命は私にかかっている
+  username: "JuyaoHuang",//わかば むつみ
+  sign: "平凡的世界，平凡的人生",//我这仅此一次的人生只取决我 私の唯一の命は私にかかっている
   avatarUrl:"/Atri.png",
   socialLinks: [
     {
