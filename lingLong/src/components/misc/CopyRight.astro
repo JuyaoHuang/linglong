@@ -37,11 +37,22 @@ const { title, published, license, author, sourceLink } = Astro.props;
         <span class="select-none text-sm text-[var(--text-color-lighten)]"
           >{i18n(I18nKeys.copy_right_author)}</span
         >
-        <p
-          class="username !my-0 line-clamp-1 text-sm text-[var(--text-color)] lg:text-base"
-        >
-          {author ?? LingLongConfig.username}
-        </p>
+        {sourceLink?(
+          <a 
+            href={sourceLink}
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="username !my-0 line-clamp-1 text-sm text-[var(--text-color)] lg:text-base"
+          >
+            {author ?? LingLongConfig.username}
+          </a>
+          ) : (
+          <p 
+            class="username !my-0 line-clamp-1 text-sm text-[var(--text-color)] lg:text-base"
+          >
+            {author ?? LingLongConfig.username}
+          </p>
+        )}
       </div>
       <div class="flex flex-col">
         <span class="select-none text-sm text-[var(--text-color-lighten)]"
@@ -108,7 +119,7 @@ const { title, published, license, author, sourceLink } = Astro.props;
   }
 
   .username{
-    @apply text-center text-transparent
+    @apply text-center !text-transparent
            bg-gradient-to-r  from-blue-500 via-purple-500 to-pink-500
            bg-clip-text
            ;
