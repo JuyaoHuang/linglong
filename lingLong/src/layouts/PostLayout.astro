@@ -26,6 +26,8 @@ const {
   author,
   sourceLink,
 } = Astro.props;
+
+console.log(sourceLink ?? "no source")
 ---
 
 <Main title={title} subTitle={subTitle} bannerImage={bannerImage}>
