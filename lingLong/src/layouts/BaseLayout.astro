@@ -1,12 +1,14 @@
 ---
 import LingLongConfig from "../../linglong.config";
 import BaseHead from "../components/BaseHead.astro";
+import  SpeedInsights  from "@vercel/speed-insights/astro"
 ---
 
 <html lang={LingLongConfig.locale}>
   <BaseHead />
   <body class="overflow-y-hidden">
     <slot />
+    <SpeedInsights />
   </body>
 </html>
 

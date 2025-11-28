@@ -15,6 +15,7 @@
     "@astrojs/svelte": "^7.2.0",
     "@astrojs/tailwind": "^5.1.4",
     "@swup/astro": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0",
     "astro": "^5.3.0",
     "astro-icon": "^1.1.5",
     "astro-pagefind": "^1.7.0",
