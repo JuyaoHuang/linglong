@@ -170,3 +170,4 @@ deploy.sh
 setup-cron.sh
 node_modules/
 *.pnpm-store/
+node_modules
