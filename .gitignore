@@ -163,24 +163,10 @@ lingLong/.pnpm-store/v3/
 lingLong/build-output.log
 
 
-# ========================== backend =====================================
-backend/.devcontainer
-backend/app/__pycache__/
-backend/app/api/__pycache__/
-backend/app/core/__pycache__/
-backend/app/data/__pycache__/
-backend/app/schemas/__pycache__/
-backend/app/services/__pycache__/
-
-
 # ======================== Global Configuration ============================
 .env
 deploy.log
-命名架构修改方案.md
-DockerHub推送问题.md
-you.md
 .claude
-DEPLOYMENT_CHECKLIST.md
 deploy.sh
 setup-cron.sh
-README_zh.md
+node_modules/
