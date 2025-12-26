@@ -1,4 +1,4 @@
-import LingLongConfig from "../linglong.config";
+import LingLongConfig from "../../linglong.config";
 import CryptoJS from "crypto-js";
 
 /**

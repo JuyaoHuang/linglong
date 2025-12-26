@@ -1,5 +1,5 @@
 import { GetIndexFromSlugID } from "./hash";
-import LingLongConfig from "../linglong.config";
+import LingLongConfig from "../../linglong.config";
 
 /**
  * Retrieves the cover URL for an unspecified entry based on the provided ID.

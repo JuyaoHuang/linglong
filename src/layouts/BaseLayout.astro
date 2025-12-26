@@ -1,8 +1,8 @@
 ---
-import LingLongConfig from "../linglong.config";
+import LingLongConfig from "../../linglong.config";
 import BaseHead from "../components/BaseHead.astro";
 import  SpeedInsights  from "@vercel/speed-insights/astro"
-import Analytics from '@vercel/analytics/astro'
+// import Analytics from '@vercel/analytics/astro'
 ---
 
 <html lang={LingLongConfig.locale}>
@@ -10,7 +10,7 @@ import Analytics from '@vercel/analytics/astro'
   <body class="overflow-y-hidden">
     <slot />
     <SpeedInsights />
-    <Analytics />
+    <!-- <Analytics /> -->
   </body>
 </html>
 
