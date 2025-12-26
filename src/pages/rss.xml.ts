@@ -1,6 +1,6 @@
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
-import LingLongConfig from "../../linglong.config";
+import LingLongConfig from "../linglong.config";
 import { IdToSlug } from "../utils/hash";
 
 export async function GET(context: { site: string }) {

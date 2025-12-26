@@ -55,17 +55,19 @@ This is a **modern static blog system** built with Astro 5, featuring:
 
 ```
 webTest/
-└── lingLong/                    # Frontend Project (Astro)
-    ├── src/
-    │   ├── components/        # UI Components
-    │   ├── contents/posts/    # Markdown Posts
-    │   ├── layouts/           # Page Layouts
-    │   ├── pages/             # Route Pages
-    │   ├── utils/             # Utility Functions
-    │   └── styles/            # Style files
-    ├── public/                # Static Assets
-    ├── dist/                  # Build Output
-    └── package.json
+├── src/
+│   ├── components/        # UI Components
+│   ├── contents/posts/    # Markdown Posts
+│   ├── layouts/           # Page Layouts
+│   ├── pages/             # Route Pages
+│   ├── utils/             # Utility Functions
+│   └── styles/            # Style files
+├── public/                # Static Assets
+├── dist/                  # Build Output
+├── astro.config.mjs       # Astro configuration
+├── linglong.config.ts     # Blog configuration
+├── tailwind.config.mjs    # Tailwind CSS configuration
+└── package.json           # Dependencies
 ```
 
 ------
@@ -80,9 +82,6 @@ webTest/
 ### 1️⃣ Development
 
 ```bash
-# Enter the frontend directory
-cd lingLong
-
 # Enable Corepack (first time)
 corepack enable
 
@@ -114,15 +113,14 @@ pnpm preview
 
 1. Push your code to GitHub
 2. Import your repository on [Netlify](https://netlify.com)
-3. Build command: `cd lingLong && pnpm build`
-4. Publish directory: `lingLong/dist`
+3. Build command: `pnpm build`
+4. Publish directory: `dist`
 
 ### Method 3: Static Hosting
 
-Build the project and deploy the `lingLong/dist` folder to any static hosting service:
+Build the project and deploy the `dist` folder to any static hosting service:
 
 ```bash
-cd lingLong
 pnpm build
 # Upload the dist/ folder to your hosting provider
 ```
@@ -133,7 +131,7 @@ pnpm build
 
 ### ✍️ Daily Writing Workflow
 
-1. Create a new Markdown file in the `lingLong/src/contents/posts/` directory
+1. Create a new Markdown file in the `src/contents/posts/` directory
 2. Write your content with frontmatter:
    ```markdown
    ---
@@ -157,7 +155,6 @@ pnpm build
 
 ```bash
 # Clear cache and rebuild
-cd lingLong
 rm -rf node_modules dist .astro
 pnpm install
 pnpm build
