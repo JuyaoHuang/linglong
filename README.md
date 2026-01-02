@@ -12,33 +12,29 @@
 
 ## 📋 Project Overview
 
-This is a **modern static blog system** built with Astro 5, featuring:
-
-- **Static Site Generation**: Fast, SEO-friendly pages generated at build time
-- **Modern Design**: Clean and elegant UI with dark mode support
-- **Enhanced Markdown**: Support for KaTeX math formulas, code highlighting, and automatic table of contents
-- **Full-text Search**: Fast client-side search powered by Pagefind
-- **Categorization System**: Multi-level categories and tags
-- **Internationalization**: Built-in support for Chinese and English
-- **Performance Optimized**: Lazy loading, smooth animations, and minimal JavaScript
-
-------
+This is a **modern static blog system** built with Astro 5, designed for developers and writers who want a fast, elegant, and customizable blogging platform.
 
 ## ✨ Key Features
 
-### 🎨 Frontend Features
-
-- ✅ **Modern Design**: A clean and elegant UI with dark mode support
-- ✅ **Enhanced Markdown**: Supports KaTeX for math formulas, code highlighting, and an automatic table of contents
+- ✅ **Modern Design**: Clean and elegant UI with dark mode support
+- ✅ **Enhanced Markdown**: KaTeX math formulas, code highlighting, and automatic table of contents
+- ✅ **Multi-level Categories**: Organize posts with first-level and second-level categories
 - ✅ **Full-text Search**: Fast client-side search powered by Pagefind
-- ✅ **Categorization System**: Supports multi-level categories and tags
-- ✅ **SEO Optimized**: Automatic generation of Sitemap, RSS, and metadata
-- ✅ **Internationalization (i18n)**: Built-in support for Chinese and English
-- ✅ **Performance Optimized**: Static generation, lazy loading for images, and smooth transition animations
-- ✅ **Analytics**: Integrated with Vercel Analytics and Speed Insights
+- ✅ **SEO Optimized**: Automatic Sitemap, RSS feed, and metadata generation
+- ✅ **Internationalization**: Built-in support for Chinese and English
+- ✅ **Performance First**: Static generation, lazy loading, and smooth animations
+- ✅ **Analytics Ready**: Integrated with Vercel Analytics and Speed Insights
 
 ------
 
+## 🎨 Screenshots
+
+| Light Mode | Dark Mode |
+|:----------:|:---------:|
+| ![Homepage](./public/demo_1.png) | ![Article](./public/demo_2.png) |
+| Homepage with elegant design | Article page with TOC |
+
+------
 ## 🏗️ Tech Stack
 
 |    Technology    | Version |         Purpose         |
@@ -137,15 +133,32 @@ pnpm build
    ---
    title: "Your Post Title"
    published: 2025-12-26
-   description: "Post description"
-   category: "Tech"
-   tags: ["astro", "web"]
+   description: "A brief description of your post"
+   first_level_category: "Technology"
+   second_level_category: "Web Development"
+   tags: ["astro", "web", "blog"]
+   draft: false
    ---
+
+   # Your Post Title
 
    Your content here...
    ```
-3. Run `pnpm build` to rebuild the site
-4. Refresh the website to see the updates
+
+### 📝 Frontmatter Field Explanation
+
+| Field | Required | Description | Example |
+|:------|:---------|:------------|:--------|
+| `title` | ✅ Yes | Post title | `"Getting Started with Astro"` |
+| `published` | ✅ Yes | Publication date | `2025-12-26` |
+| `description` | ✅ Yes | Brief description for SEO and post card | `"A comprehensive guide to..."` |
+| `first_level_category` | ✅ Yes | Primary category | `"Technology"`, `"Life"` |
+| `second_level_category` | ✅ Yes | Sub-category | `"Web Development"`, `"Tutorial"` |
+| `tags` | ❌ No | Post tags (array) | `["astro", "javascript"]` |
+| `draft` | ❌ No | Hide from production if `true` | `false` (default) |
+
+3. Run `pnpm dev` to preview locally, or `pnpm build` for production
+4. Your new post will automatically appear on the homepage and in the corresponding category pages
 
 ------
 
@@ -209,7 +222,7 @@ Issues and Pull Requests are welcome!
 For questions or suggestions, please contact me via:
 
 - Submitting an [Issue](https://github.com/JuyaoHuang/lingLong/issues)
-- Email: [your-email@example.com](mailto:your-email@example.com)
+- Email: [mail@juayohuang.top](mailto:mail@juayohuang.top)
 
 ------
 
