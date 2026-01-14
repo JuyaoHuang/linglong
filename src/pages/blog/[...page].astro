@@ -7,6 +7,7 @@ import { getBlogCollection, getUniqueTagsWithCount, sortMDByDate } from 'astro-p
 import { Button, Icon } from 'astro-pure/user'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import config from '@/site-config'
+import { getFirstCategories } from '@/utils/categories'
 
 export const prerender = true
 
@@ -14,9 +15,15 @@ export const getStaticPaths = (async ({ paginate }) => {
   const collections = sortMDByDate(await getBlogCollection())
   const uniqueTags = getUniqueTagsWithCount(collections).map(([tag]) => tag)
   const collectionsCount = collections.length
+  const categoriesMap = await getFirstCategories()
+  const uniqueCategories = [...categoriesMap.values()].map(cat => ({
+    name: cat.name,
+    slug: cat.slug,
+    count: cat.posts.length
+  }))
   return paginate(collections, {
     pageSize: config.content.blogPageSize,
-    props: { uniqueTags, collectionsCount }
+    props: { uniqueTags, collectionsCount, uniqueCategories }
   })
 }) satisfies GetStaticPaths
 
@@ -24,9 +31,10 @@ interface Props {
   page: Page<CollectionEntry<'blog'>>
   uniqueTags: string[]
   collectionsCount: number
+  uniqueCategories: Array<{ name: string; slug: string; count: number }>
 }
 
-const { page, uniqueTags, collectionsCount } = Astro.props
+const { page, uniqueTags, collectionsCount, uniqueCategories } = Astro.props
 
 const meta = {
   description: 'Some posts or archives of my blog',
@@ -97,10 +105,36 @@ const paginationProps = {
                 }
               </ul>
               <span class='mt-4 block sm:text-end'>
-                <a aria-label='View all blog categories' href='/tags' data-astro-prefetch>
+                <a aria-label='View all blog tags' href='/tags' data-astro-prefetch>
                   View all →
                 </a>
               </span>
+
+              {/* Categories section */}
+              {!!uniqueCategories.length && (
+                <>
+                  <h2 class='mb-4 mt-8 flex items-center text-lg font-medium'>
+                    <Icon name='list' class='me-2' />
+                    Categories
+                  </h2>
+                  <ul class='text-bgColor flex flex-wrap gap-2'>
+                    {uniqueCategories.slice(0, 10).map((category) => (
+                      <li>
+                        <Button
+                          title={`${category.name} (${category.count})`}
+                          href={category.slug}
+                          variant='pill'
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                  <span class='mt-4 block sm:text-end'>
+                    <a aria-label='View all blog categories' href='/categories' data-astro-prefetch>
+                      View all →
+                    </a>
+                  </span>
+                </>
+              )}
             </aside>
           )}
         </div>

@@ -1,0 +1,96 @@
+---
+import { Button } from 'astro-pure/user'
+import { cn } from 'astro-pure/utils'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import { getSecondCategories } from '@/utils/categories'
+import { IdToSlug } from '@/utils/slug'
+
+export const prerender = true
+
+export async function getStaticPaths() {
+  const { categoriesMap, allPosts } = await getSecondCategories()
+
+  // Group second-level categories by first-level category
+  const firstCategoryMap = new Map<string, { name: string; secondCategories: Array<{ name: string; slug: string; count: number }> }>()
+
+  Array.from(categoriesMap.values()).forEach(category => {
+    const slugParts = category.slug.split('/').filter(Boolean)
+    const firstCategorySlug = slugParts[1]
+
+    // Find the first category name
+    const firstCategoryName = allPosts.find(post =>
+      IdToSlug(post.data.first_level_category) === firstCategorySlug
+    )?.data.first_level_category || firstCategorySlug
+
+    if (!firstCategoryMap.has(firstCategorySlug)) {
+      firstCategoryMap.set(firstCategorySlug, {
+        name: firstCategoryName,
+        secondCategories: []
+      })
+    }
+
+    firstCategoryMap.get(firstCategorySlug)!.secondCategories.push({
+      name: category.name,
+      slug: category.slug,
+      count: category.posts.length
+    })
+  })
+
+  return Array.from(firstCategoryMap.entries()).map(([firstCategorySlug, data]) => ({
+    params: { first_category: firstCategorySlug },
+    props: {
+      categoryName: data.name,
+      secondCategories: data.secondCategories
+    }
+  }))
+}
+
+type Props = {
+  categoryName: string
+  secondCategories: Array<{ name: string; slug: string; count: number }>
+}
+
+const { categoryName, secondCategories } = Astro.props
+const { first_category } = Astro.params
+
+const meta = {
+  description: `All posts in ${categoryName} category`,
+  title: `Category: ${categoryName}`
+}
+---
+
+<PageLayout {meta}>
+  <Button title='Back' href='/categories' variant='back' />
+  <main class='mt-6 lg:mt-10'>
+    <div id='content-header' class='animate'>
+      <h1 class='mb-2 text-3xl font-medium'>{categoryName}</h1>
+      <p class='text-muted-foreground'>Select a subcategory:</p>
+    </div>
+
+    <div id='content' class='animate mt-6'>
+      {
+        secondCategories.length > 0 ? (
+          <ul class='flex flex-wrap gap-4'>
+            {secondCategories.map((category) => (
+              <li>
+                <Button
+                  href={category.slug}
+                  variant='pill'
+                  class={cn(
+                    'items-start gap-x-1',
+                    category.count > 2 ? 'rounded-xl px-3 py-1 text-xl' : category.count > 1 && 'text-lg'
+                  )}
+                >
+                  {category.name}
+                  <span class={category.count > 2 ? 'text-base' : 'text-xs'}>{category.count}</span>
+                </Button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No subcategories yet.</p>
+        )
+      }
+    </div>
+  </main>
+</PageLayout>

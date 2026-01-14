@@ -8,6 +8,8 @@ tags:
 language: 'English'
 # Remove or set false to turn draft page into normal ones
 draft: true
+first_level_category: 'project'
+second_level_category: 'project'
 ---
 
 ```log title="hello.log"

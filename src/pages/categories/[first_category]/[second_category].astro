@@ -1,0 +1,73 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { PostPreview } from 'astro-pure/components/pages'
+import { Button } from 'astro-pure/user'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import { getSecondCategories } from '@/utils/categories'
+import { IdToSlug } from '@/utils/slug'
+
+export const prerender = true
+
+export async function getStaticPaths() {
+  const { categoriesMap, allPosts } = await getSecondCategories()
+
+  return Array.from(categoriesMap.values()).map(category => {
+    const slugParts = category.slug.split('/').filter(Boolean)
+
+    // Find the first category name by matching the slug
+    const firstCategoryName = allPosts.find(post =>
+      IdToSlug(post.data.first_level_category) === slugParts[1]
+    )?.data.first_level_category || slugParts[1]
+
+    return {
+      params: {
+        first_category: slugParts[1],
+        second_category: slugParts[2]
+      },
+      props: {
+        posts: category.posts,
+        secondCategoryName: category.name,
+        firstCategoryName: firstCategoryName
+      }
+    }
+  })
+}
+
+type Props = {
+  posts: CollectionEntry<'blog'>[]
+  secondCategoryName: string
+  firstCategoryName: string
+}
+
+const { posts, secondCategoryName, firstCategoryName } = Astro.props
+const { first_category } = Astro.params
+
+const meta = {
+  description: `All posts in ${firstCategoryName} - ${secondCategoryName}`,
+  title: `${firstCategoryName} - ${secondCategoryName}`
+}
+---
+
+<PageLayout {meta}>
+  <Button title='Back' href={`/categories/${first_category}`} variant='back' />
+  <main class='mt-6 lg:mt-10'>
+    <div id='content-header' class='animate'>
+      <h1 class='mb-2 text-3xl font-medium'>{firstCategoryName}</h1>
+      <h2 class='text-xl text-muted-foreground mb-6'>{secondCategoryName}</h2>
+    </div>
+
+    <div id='content' class='animate'>
+      {
+        posts.length > 0 ? (
+          <ul class='flex flex-col gap-4'>
+            {posts.map((post) => (
+              <PostPreview post={post} detailed={true} />
+            ))}
+          </ul>
+        ) : (
+          <p>No posts yet.</p>
+        )
+      }
+    </div>
+  </main>
+</PageLayout>

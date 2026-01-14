@@ -6,6 +6,8 @@ tags:
   - Markdown
 heroImage: { src: './thumbnail.jpg', color: '#B4C6DA' }
 language: 'English'
+first_level_category: 'project'
+second_level_category: 'project'
 ---
 
 ## Basic Syntax

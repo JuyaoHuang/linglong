@@ -1,0 +1,53 @@
+---
+import { Button } from 'astro-pure/user'
+import { cn } from 'astro-pure/utils'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import { getFirstCategories } from '@/utils/categories'
+
+const categoriesMap = await getFirstCategories()
+const allCategories = [...categoriesMap.values()].map(category => ({
+  name: category.name,
+  slug: category.slug,
+  count: category.posts.length
+}))
+
+const meta = {
+  description: "A list of all the categories I've written about in my posts",
+  title: 'All Categories'
+}
+---
+
+<PageLayout {meta}>
+  <Button title='Back' href='/blog' variant='back' />
+  <main class='mt-6 lg:mt-10'>
+    <div id='content-header' class='animate'>
+      <h1 class='mb-6 text-3xl font-medium'>Categories</h1>
+    </div>
+
+    <div id='content' class='animate'>
+      {
+        allCategories.length > 0 ? (
+          <ul class='flex flex-wrap gap-4'>
+            {allCategories.map((category) => (
+              <li>
+                <Button
+                  href={category.slug}
+                  variant='pill'
+                  class={cn(
+                    'items-start gap-x-1',
+                    category.count > 2 ? 'rounded-xl px-3 py-1 text-xl' : category.count > 1 && 'text-lg'
+                  )}
+                >
+                  {category.name}
+                  <span class={category.count > 2 ? 'text-base' : 'text-xs'}>{category.count}</span>
+                </Button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No categories yet.</p>
+        )
+      }
+    </div>
+  </main>
+</PageLayout>
