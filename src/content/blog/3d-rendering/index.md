@@ -7,8 +7,8 @@ tags:
   - Example
   - 3D
 language: 'English'
-first_level_category: 'project'
-second_level_category: 'project'
+first_level_category: 'pro'
+second_level_category: 'pro'
 heroImage: { src: './thumbnail.jpg', color: '#D58388' }
 ---
 

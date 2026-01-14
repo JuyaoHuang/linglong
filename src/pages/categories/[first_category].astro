@@ -76,13 +76,10 @@ const meta = {
                 <Button
                   href={category.slug}
                   variant='pill'
-                  class={cn(
-                    'items-start gap-x-1',
-                    category.count > 2 ? 'rounded-xl px-3 py-1 text-xl' : category.count > 1 && 'text-lg'
-                  )}
+                  class='items-start gap-x-1 rounded-xl px-3 py-1 text-xl'
                 >
                   {category.name}
-                  <span class={category.count > 2 ? 'text-base' : 'text-xs'}>{category.count}</span>
+                  <span class='text-base'>{category.count}</span>
                 </Button>
               </li>
             ))}
