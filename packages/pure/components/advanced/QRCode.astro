@@ -1,0 +1,21 @@
+---
+import config from 'virtual:config'
+
+const { content, class: className, ...props } = Astro.props
+---
+
+<div id='qrcode-container' class={className} {...props}></div>
+
+<script is:inline src={`${config.npmCDN}/qrcodejs/qrcode.min.js`}></script>
+<script is:inline define:vars={{ content }}>
+  const renderContent = content ?? window.location.href
+  // Load qrcode
+  function loadQRcode(qrcodeContainer) {
+    if (!qrcodeContainer) throw new Error('qrcode container not found')
+    if (qrcodeContainer.innerHTML !== '') return
+    new QRCode(qrcodeContainer, renderContent)
+  }
+  const qrcodeContainer = document.getElementById('qrcode-container')
+  if (!qrcodeContainer) throw new Error('qrcode container not found')
+  loadQRcode(qrcodeContainer)
+</script>

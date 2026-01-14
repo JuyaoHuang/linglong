@@ -1,0 +1,155 @@
+---
+import { BackToTop } from 'astro-pure/components/pages'
+import type { SiteMeta } from 'astro-pure/types'
+import { Button, Icon } from 'astro-pure/user'
+import { cn } from 'astro-pure/utils'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import { integ } from '@/site-config'
+
+interface Props {
+  meta: SiteMeta
+  highlightColor?: string
+  back?: string
+}
+
+const { meta, highlightColor, back = '/', ...props } = Astro.props
+---
+
+<PageLayout {meta} {highlightColor} {...props}>
+  <Button title='Back' href={back} variant='back' />
+  <main class='mt-6 items-start gap-x-10 md:flex'>
+    {/* Sidebar */}
+    <aside
+      class='animate top-20 min-w-48 basis-60 overflow-y-scroll max-md:hidden z-40 fixed md:sticky md:order-2 lg:shrink-0 max-md:border max-md:px-4 max-md:py-3 max-md:bg-muted max-md:rounded-xl'
+      style='height:calc(100vh - 7rem);'
+      id='sidebar'
+    >
+      <slot name='sidebar' />
+    </aside>
+    <div
+      id='sidebar-shade'
+      class='fixed top-0 start-0 w-full h-full'
+      style='display:none;background-color:#00000091;z-index:31'
+    >
+    </div>
+
+    <article class='min-w-0 grow'>
+      {/* Content header */}
+      <div id='content-header' class='animate'>
+        <slot name='header' />
+      </div>
+
+      {/* Content */}
+      <div
+        id='content'
+        class={cn(
+          'max-w-none animate mt-8 md:min-w-[45ch] overflow-x-hidden',
+          integ.typography.class
+        )}
+      >
+        <slot />
+      </div>
+    </article>
+  </main>
+
+  <div class='bottom mt-6 items-start gap-x-10 md:flex'>
+    {/* Bottom */}
+    <div class='flex-1 text-muted-foreground md:min-w-[50ch]'>
+      <slot name='bottom' />
+    </div>
+    <div class='min-w-48 basis-60'>
+      <slot name='bottom-sidebar' />
+    </div>
+  </div>
+
+  <BackToTop header='content-header' content='content'>
+    <button
+      slot='other-icons'
+      aria-label='Toggle sidebar'
+      class='size-10 flex items-center justify-center rounded-full border-2 border-transparent bg-muted text-muted-foreground duration-300 hover:border-border/75 md:hidden sm:size-12'
+      id='sidebar-btn'
+    >
+      <Icon name='list' />
+    </button>
+  </BackToTop>
+</PageLayout>
+
+<script>
+  // Toggle sidebar visibility on button click
+  const sidebarButton = document.getElementById('sidebar-btn')
+  const sidebar = document.getElementById('sidebar')
+  const sidebarShade = document.getElementById('sidebar-shade') as HTMLElement
+
+  if (sidebarShade) {
+    sidebarShade.addEventListener('click', () => {
+      toggleSidebar()
+    })
+  }
+
+  function toggleSidebar() {
+    if (sidebar && sidebar.classList.contains('show')) {
+      sidebar.classList.remove('show')
+      sidebarShade.style.display = 'none'
+    } else if (sidebar) {
+      sidebar.classList.add('show')
+      sidebarShade.style.display = 'block'
+    }
+  }
+
+  sidebarButton?.addEventListener('click', () => {
+    toggleSidebar()
+  })
+</script>
+<style>
+  @media (min-width: 769px) {
+    #sidebar-shade {
+      display: none !important;
+    }
+  }
+  @media (max-width: 769px) {
+    aside.show {
+      display: block !important;
+      opacity: 1;
+    }
+
+    @keyframes fade-in-side {
+      0% {
+        transform: translateX(50%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    aside {
+      animation: 300ms fade-in-side !important;
+      animation-fill-mode: forwards;
+      right: 0;
+      top: 0 !important;
+      height: 100vh !important;
+      min-width: 40vw !important;
+      max-width: 75vw !important;
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+      padding-top: 1.5rem !important;
+      padding-bottom: 1.5rem !important;
+    }
+    #sidebar-shade {
+      animation: 300ms fade-in;
+    }
+  }
+  @media (max-width: 640px) {
+    aside {
+      min-width: 55vw !important;
+    }
+  }
+</style>

@@ -1,0 +1,41 @@
+### Astro ###
+dist/
+.astro/
+
+### Vercel ###
+.vercel/
+
+### Vim ###
+[._]*.un~
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Code workspace files
+*.code-workspace
+
+### Node ###
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# dependencies
+node_modules/
+
+# environment variables
+.env
+.env.production
+
+### Custom ###
+.DS_Store
+old_blog
+ignore.*
+bunfig.toml
+/src/content/blog/test.*
+/test/

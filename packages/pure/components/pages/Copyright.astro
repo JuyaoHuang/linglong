@@ -1,0 +1,150 @@
+---
+import type { CollectionKey, InferEntrySchema } from 'astro:content'
+
+import config from 'virtual:config'
+
+import { cn, getFormattedDate } from '../../utils'
+import { QRCode } from '../advanced'
+import { Icon } from '../user'
+
+interface Props<T extends CollectionKey> {
+  data: InferEntrySchema<T>
+  class?: string
+}
+
+const {
+  data: { heroImage, title, publishDate },
+  class: className
+} = Astro.props
+
+const image = typeof heroImage?.src === 'string' ? heroImage?.src : (heroImage?.src?.src ?? '')
+
+const shares = {
+  weibo: {
+    link: `http://service.weibo.com/share/share.php?url=${Astro.url}&title=${title}&pic=${image}`
+  },
+  x: {
+    link: `https://x.com/intent/tweet?text='${title}'&url='${Astro.url}'&via='${config.author}'`
+  },
+  bluesky: {
+    link: `https://bsky.app/intent/compose?text=${title}%0A${Astro.url}`
+  }
+} as const
+---
+
+<div
+  class={cn(
+    'relative flex flex-col gap-y-2 rounded-xl border px-3 sm:px-4 py-2 sm:py-3',
+    className
+  )}
+>
+  <Icon class='absolute end-4 top-4 size-20 opacity-10' name='copyright' />
+
+  {/* title & link */}
+  <div class='flex flex-col'>
+    <div class='font-medium text-foreground'>{title}</div>
+    <div class='text-sm'>{Astro.url}</div>
+  </div>
+
+  {/* common info */}
+  <div class='flex flex-row flex-wrap justify-start gap-x-5 gap-y-1 sm:gap-x-8'>
+    <div class='flex gap-x-2 sm:flex-col'>
+      <span>Author</span>
+      <span class='text-sm text-foreground max-sm:place-self-center'>{config.author}</span>
+    </div>
+    {
+      publishDate && (
+        <div class='flex gap-x-2 sm:min-w-16 sm:flex-col'>
+          <span>Published at</span>
+          <span class='text-sm text-foreground max-sm:place-self-center'>
+            {getFormattedDate(publishDate, {
+              month: 'long'
+            })}
+          </span>
+        </div>
+      )
+    }
+    <div class='flex gap-x-2 sm:flex-col'>
+      <span>Copyright</span>
+      <a
+        class='text-sm text-foreground max-sm:place-self-center'
+        href='https://creativecommons.org/licenses/by/4.0/'
+        target='_blank'
+      >
+        CC BY-NC-SA 4.0
+      </a>
+    </div>
+  </div>
+
+  {/* functions */}
+  <div class='relative'>
+    <div class='flex flex-row gap-3'>
+      <button
+        id='copy-link'
+        aria-label='Copy link'
+        class='group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5'
+      >
+        <Icon class='size-5' name='link' />
+      </button>
+      <button
+        id='get-qrcode'
+        aria-label='Get QR code'
+        class='group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5'
+      >
+        <Icon class='size-5' name='qrcode' />
+      </button>
+      {
+        config.content.share.map((share) => (
+          <a
+            href={shares[share].link}
+            target='_blank'
+            id={`share-${share}`}
+            aria-label={`Share to ${share}`}
+            class='group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5'
+          >
+            <Icon class='size-5' name={share} />
+          </a>
+        ))
+      }
+    </div>
+    <QRCode
+      class='absolute z-10 -mt-2 box-content max-h-0 max-w-44 overflow-hidden rounded-xl border bg-muted p-4 opacity-0 transition-all duration-300 ease-in-out'
+    />
+  </div>
+</div>
+
+<div class='mx-6 rounded-b-xl border border-t-0 px-3 pb-1.5 pt-1 sm:mx-8 sm:px-4'>
+  <a
+    href='/projects#sponsorship'
+    class='flex items-center justify-between text-muted-foreground no-underline'
+    target='_blank'
+  >
+    <span>Buy me a cup of coffee ☕.</span>
+    <Icon class='box-content size-5 p-1' name='receive-money' />
+  </a>
+</div>
+
+<style>
+  #qrcode-container.expanded {
+    max-height: 11rem;
+    transform: translateY(4px);
+    opacity: 100;
+  }
+</style>
+
+<script>
+  import { showToast } from '../../utils'
+
+  // Copy link
+  const copyLink = document.getElementById('copy-link')
+  copyLink?.addEventListener('click', () => {
+    navigator.clipboard.writeText(window.location.href)
+    // Show toast
+    showToast({ message: 'Link copied!' })
+  })
+
+  // QRCode
+  const getQRCode = document.getElementById('get-qrcode')
+  const qrcodeContainer = document.getElementById('qrcode-container')
+  getQRCode?.addEventListener('click', () => qrcodeContainer?.classList.toggle('expanded'))
+</script>

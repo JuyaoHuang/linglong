@@ -1,0 +1,50 @@
+{
+  "name": "astro-theme-pure",
+  "workspaces": [
+    "packages/*"
+  ],
+  "type": "module",
+  "version": "4.1.2",
+  "scripts": {
+    "dev": "astro dev",
+    "dev:check": "astro check --watch & astro dev",
+    "build": "astro-pure check && astro check && astro build",
+    "preview": "astro preview",
+    "sync": "astro sync",
+    "check": "astro check",
+    "astro": "astro",
+    "pure": "astro-pure",
+    "format": "prettier --write  '**/*.{js,jsx,ts,tsx,md,mdx,astro}'",
+    "lint": "eslint --fix 'src/**/*.{js,ts,jsx,tsx,astro}'",
+    "yijiansilian": "bun lint && bun sync && bun check && bun format",
+    "clean": "rm -rf .astro .vercel dist",
+    "cache:avatars": "tsx preset/scripts/cacheAvatars.ts"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@astrojs/rss": "^4.0.14",
+    "@astrojs/vercel": "^9.0.3",
+    "@waline/client": "^3.8.0",
+    "astro": "^5.16.6",
+    "astro-pure": "1.4.0",
+    "katex": "^0.16.27",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
+    "sharp": "^0.34.5",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@astrojs/markdown-remark": "^6.3.10",
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/node": "^9.5.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "@typescript-eslint/parser": "^8.51.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-astro": "^1.5.0",
+    "prettier": "^3.7.4",
+    "prettier-plugin-astro": "^0.14.1",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-slug": "^6.0.0",
+    "remark-gfm": "^4.0.1"
+  }
+}

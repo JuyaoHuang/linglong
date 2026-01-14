@@ -1,0 +1,48 @@
+---
+interface Props {
+  width?: string
+}
+
+const { width } = Astro.props
+---
+
+<div class='mdx-repl overflow-hidden rounded-xl border'>
+  <div class='mdx-repl-container flex flex-col items-center justify-center p-4'>
+    <slot />
+  </div>
+  <div class='bg-muted'>
+    <slot name='desc' />
+  </div>
+</div>
+
+<style define:vars={{ width }}>
+  .mdx-repl {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.1) 0%,
+      hsl(var(--background) / 1) 100%
+    );
+  }
+
+  /* Container */
+  .mdx-repl-container > :global(*) {
+    width: var(--width);
+  }
+  .mdx-repl-container > :global(*):first-child {
+    margin-top: 0;
+  }
+  .mdx-repl-container > :global(*):last-child {
+    margin-bottom: 0;
+  }
+
+  /* Desc especial adaption */
+  /* Code */
+  .mdx-repl :global(.astro-code) {
+    margin: 0;
+    border-radius: 0;
+  }
+  /* Tabs */
+  .mdx-repl :global(div[role='tabpanel']) {
+    margin-top: 0;
+  }
+</style>

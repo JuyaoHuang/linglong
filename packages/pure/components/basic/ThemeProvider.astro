@@ -1,0 +1,40 @@
+---
+
+---
+
+{/* Use inline mode to quick load color, which can avoid splash */}
+<script is:inline>
+  function simpleSetTheme() {
+    let theme = localStorage.getItem('theme')
+    // If undefined or 'system', get from system
+    if (!theme || theme === 'system') {
+      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', theme === 'dark' ? '#0B0B10' : '#FCFCFD')
+  }
+  simpleSetTheme()
+  document.addEventListener('astro:page-load', () => simpleSetTheme())
+</script>
+
+<script>
+  import { Icons } from '../../libs/icons'
+  import { listenThemeChange } from '../../utils'
+
+  // Listen for theme change event
+  listenThemeChange()
+  // Listen for toast event
+  document.addEventListener('toast', (e) => {
+    const { message, time } = (e as CustomEvent).detail
+    const toast = document.createElement('div')
+    toast.className =
+      'animate fixed bottom-8 z-20 px-4 py-2 bg-muted text-foreground rounded-lg border shadow-lg flex items-center gap-2'
+    toast.innerHTML = `<svg width='22' height='22' viewBox='0 0 24 24' fill='currentColor'>${Icons.info}</svg> <span>${message}</span>`
+    document.body.appendChild(toast)
+    setTimeout(() => {
+      toast.remove()
+    }, time || 3000)
+  })
+</script>

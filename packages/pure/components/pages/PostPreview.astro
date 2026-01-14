@@ -1,0 +1,151 @@
+---
+import { Image } from 'astro:assets'
+import { type CollectionEntry, type CollectionKey, render } from 'astro:content'
+
+import { cn } from '../../utils'
+import { Button, FormattedDate, Icon } from '../user'
+
+type Props<T extends CollectionKey> = {
+  post: CollectionEntry<T>
+  detailed?: boolean
+  class?: string
+}
+
+const { post, detailed = false, class: className } = Astro.props
+const { id, data } = post
+const { remarkPluginFrontmatter } = await render(post)
+const postDate = data.updatedDate ?? data.publishDate
+---
+
+<li
+  class={cn('post-preview', className)}
+  style={detailed &&
+    data.heroImage?.color &&
+    `--preview-highlight:color-mix(in srgb,${data.heroImage.color} 40%,hsl(var(--foreground)/var(--un-text-opacity,1)));
+    --preview-highlight-bg:hsl(from ${data.heroImage.color} h s l/20%)`}
+>
+  <a
+    class={cn(
+      'block w-full relative group rounded-2xl border bg-background transition-colors ease-in-out px-5 py-2.5 hover:bg-muted hover:text-primary',
+      detailed && 'max-sm:px-4 sm:py-5',
+      detailed && data.heroImage && 'max-md:pt-24'
+    )}
+    href={`/blog/${id}`}
+    data-astro-prefetch
+  >
+    {
+      detailed && data.heroImage && (
+        <Image
+          alt={data.heroImage.alt || data.title}
+          class='cover-image absolute end-0 top-0 z-0 h-2/3 w-full rounded-2xl object-cover opacity-50 transition-opacity duration-300 group-hover:opacity-70 md:h-full md:w-3/5'
+          loading='eager'
+          {...data.heroImage}
+        />
+      )
+    }
+    <div
+      class={cn('relative flex flex-col gap-1', !detailed && 'sm:flex-row sm:items-center')}
+      style='z-index:1'
+    >
+      <FormattedDate class='min-w-[95px] text-xs' date={postDate} />
+
+      {/* title */}
+      <div class='flex justify-between flex-grow'>
+        <div class={detailed && 'font-medium'}>
+          {data.draft && <span class='text-red-500'>(Draft) </span>}
+          {data.title}
+        </div>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='16'
+          height='16'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke-width='2.5'
+          stroke-linecap='round'
+          stroke-linejoin='round'
+          class='preview-redirect my-1 stroke-muted-foreground group-hover:stroke-primary'
+          ><line
+            x1='5'
+            y1='12'
+            x2='19'
+            y2='12'
+            class='translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100'
+          ></line><polyline
+            points='12 5 19 12 12 19'
+            class='translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1'
+          ></polyline></svg
+        >
+      </div>
+      {
+        detailed && (
+          <>
+            {/* desc */}
+            <p
+              class={cn(
+                'line-clamp-2 text-sm text-muted-foreground sm:line-clamp-3',
+                data.heroImage && 'sm:me-24'
+              )}
+            >
+              {data.description}
+            </p>
+            <div class='py-2 flex items-center gap-2 text-sm italic leading-4 text-muted-foreground'>
+              {/* reading time */}
+              <span class='flex items-center gap-1'>
+                <Icon name='time' class='size-4' />
+                {remarkPluginFrontmatter.minutesRead}
+              </span>
+              {/* language */}
+              {data.language && (
+                <span class='flex items-center gap-1'>
+                  <Icon name='earth' class='size-4' />
+                  {data.language}
+                </span>
+              )}
+            </div>
+            {data.tags.length > 0 && (
+              <object title='Tags' aria-label='Tags' aria-labelledby='Tags'>
+                <ul class='tag-list mt-1 flex gap-2'>
+                  {data.tags.map((tag: string) => (
+                    <li>
+                      <Button as='a' title={tag} href={`/tags/${tag}`} variant='pill' />
+                    </li>
+                  ))}
+                </ul>
+              </object>
+            )}
+          </>
+        )
+      }
+    </div>
+  </a>
+
+  <style>
+    .post-preview {
+      --preview-highlight-final: var( --preview-highlight, hsl(var(--primary) / var(--un-text-opacity, 1))
+      );
+    }
+    .post-preview:hover {
+      & > a,
+      & .tag-list a {
+        background-color: var( --preview-highlight-bg, hsl(var(--muted) / var(--un-bg-opacity, 1))) !important;
+      }
+      & > a,
+      & .tag-list a:hover {
+        color: var(--preview-highlight-final) !important;
+      }
+      & > a .preview-redirect {
+        stroke: var(--preview-highlight-final) !important;
+      }
+    }
+    .cover-image {
+      mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    }
+
+    @media (max-width: 768px) {
+      .cover-image {
+        mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+      }
+    }
+  </style>
+</li>

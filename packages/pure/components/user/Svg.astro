@@ -1,0 +1,41 @@
+---
+// https://github.com/jasikpark/astro-svg-loader/blob/main/src/components/Svg/Svg.astro
+import { overrideSvgAttributes, type SVGAttributes } from '../../plugins/override-svg-attributes'
+
+// accepts SVG attributes which will override the ones in the original SVG
+export interface Props extends SVGAttributes {
+  /**  pass an `import("*.svg?raw")` to `Svg` for the svg file to use */
+  src: Promise<typeof import('*.svg?raw')>
+}
+
+const { src, ...attributeOverrides } = Astro.props as Props
+
+const SVG_NOT_FOUND = 'Could not find an SVG at the provided `src`'
+const ALT_NOT_ALLOWED =
+  '`alt` is not a valid prop for svg, perhaps you mean `aria-label` or `aria-hidden`?'
+
+const svgImport = await src
+
+if (!svgImport) {
+  throw new Error(SVG_NOT_FOUND)
+}
+
+const svgSource = svgImport.default
+
+if (!svgSource) {
+  throw new Error(SVG_NOT_FOUND)
+}
+
+if ('alt' in attributeOverrides) {
+  throw new Error(ALT_NOT_ALLOWED)
+}
+
+if (!svgSource.trimStart().toLowerCase().startsWith('<svg')) {
+  throw new Error(`${SVG_NOT_FOUND}, provided: ${svgSource.slice(0, 23)}
+  maybe you need to add '?raw' to the end of the import?`)
+}
+
+const contents = overrideSvgAttributes(svgSource, attributeOverrides)
+---
+
+<Fragment set:html={contents} />

@@ -1,0 +1,76 @@
+---
+import type { MarkdownHeading, MarkdownLayoutProps } from 'astro'
+
+import { BackToTop, TOC } from 'astro-pure/components/pages'
+import { Button, Icon } from 'astro-pure/user'
+import { cn } from 'astro-pure/utils'
+import config from 'virtual:config'
+import PageLayout from '@/layouts/BaseLayout.astro'
+
+type Props = MarkdownLayoutProps<{
+  title: string
+  description: string
+  heroImage?: { src: string }
+  language?: string
+  back?: string
+}> & {
+  headings: MarkdownHeading[]
+}
+
+const { frontmatter, headings } = Astro.props
+const { title, description, heroImage, language, back } = frontmatter
+const socialImage = heroImage?.src ?? config.socialCard
+---
+
+<PageLayout meta={{ title, description, ogImage: socialImage }}>
+  <Button title='Back' href={back ?? '/'} variant='back' />
+  <main class='mt-6 items-start gap-x-10 md:flex lg:mt-10'>
+    {
+      !!headings.length && (
+        <TOC
+          class='animate top-24 min-w-48 basis-60 max-md:hidden md:sticky md:order-2 lg:shrink-0'
+          {headings}
+        />
+      )
+    }
+
+    <article class='min-w-0 grow'>
+      <div id='content-header' class='animate'>
+        <h1 class='text-2xl font-medium sm:mb-2 sm:text-3xl'>
+          {title}
+        </h1>
+        <div class='mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs leading-6 text-muted-foreground'>
+          {
+            // Language
+            language && (
+              <span class='flex items-center gap-1'>
+                <Icon name='earth' />
+                {language}
+              </span>
+            )
+          }
+          {
+            // Description
+            description && (
+              <blockquote class='text-sm italic text-muted-foreground'>
+                <q>{description}</q>
+              </blockquote>
+            )
+          }
+        </div>
+      </div>
+
+      <div
+        id='content'
+        class={cn(
+          'animate mt-8 max-w-none md:min-w-[45ch] overflow-x-hidden',
+          config.integ.typography.class
+        )}
+      >
+        <slot />
+      </div>
+    </article>
+  </main>
+
+  <BackToTop header='content-header' content='content' />
+</PageLayout>

@@ -1,0 +1,27 @@
+---
+import type { HTMLTag, Polymorphic } from 'astro/types'
+
+import { cn } from '../../utils'
+
+type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
+  class?: string
+}
+
+const { as: Tag = 'span', class: className } = Astro.props
+---
+
+<Tag
+  class={cn(
+    'spoiler bg-muted rounded text-transparent hover:text-inherit px-1 transition-colors',
+    className
+  )}
+>
+  <slot />
+</Tag>
+
+<style>
+  .spoiler:not(:hover) :global(*) {
+    color: inherit !important;
+    background-color: transparent !important;
+  }
+</style>

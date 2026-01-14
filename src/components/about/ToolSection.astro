@@ -1,0 +1,90 @@
+---
+import { type ImageMetadata } from 'astro'
+import { Image } from 'astro:assets'
+
+import { Svg } from 'astro-pure/user'
+import { cn } from 'astro-pure/utils'
+
+interface Props {
+  class?: string
+  title: string
+  tools: {
+    name: string
+    description: string
+    href: string
+    icon: Promise<typeof import('*.svg?raw')> | ImageMetadata
+    darkIcon?: Promise<typeof import('*.svg?raw')> | ImageMetadata
+  }[]
+}
+
+const { class: className, title, tools, ...props } = Astro.props
+
+function isImageMetadata(obj: unknown): obj is ImageMetadata {
+  return typeof obj === 'object' && obj !== null && 'src' in obj
+}
+---
+
+<div
+  class={cn('not-prose flex flex-col rounded-xl border py-3 px-3 gap-y-3 sm:gap-y-4', className)}
+  {...props}
+>
+  <div class='m-0 px-2 text-lg font-medium'>{title}</div>
+  <div class='grid grid-cols-1 gap-x-2 gap-y-2 sm:grid-cols-2'>
+    {
+      tools.map((tool) => (
+        <a
+          class='group relative text-sm leading-normal no-underline'
+          href={tool.href}
+          id={tool.name}
+          target='_blank'
+        >
+          <div class='flex items-center gap-x-3 rounded-lg border border-transparent px-1.5 py-1 transition-colors hover:border-border hover:bg-muted'>
+            {tool.darkIcon ? (
+              <>
+                {isImageMetadata(tool.icon) ? (
+                  <div class='size-10 rounded-lg bg-card p-2 dark:hidden'>
+                    <Image src={tool.icon} alt={tool.name} class='h-full w-full object-contain' />
+                  </div>
+                ) : (
+                  <Svg
+                    src={tool.icon}
+                    class='size-10 rounded-lg bg-card fill-foreground p-2 dark:hidden'
+                  />
+                )}
+
+                {isImageMetadata(tool.darkIcon) ? (
+                  <div class='size-10 rounded-lg bg-card p-2 hidden dark:block'>
+                    <Image
+                      src={tool.darkIcon}
+                      alt={tool.name}
+                      class='h-full w-full object-contain'
+                    />
+                  </div>
+                ) : (
+                  <Svg
+                    src={tool.darkIcon}
+                    class='size-10 rounded-lg bg-card fill-foreground p-2 hidden dark:block'
+                  />
+                )}
+              </>
+            ) : (
+              <>
+                {isImageMetadata(tool.icon) ? (
+                  <div class='size-10 rounded-lg bg-card p-2'>
+                    <Image src={tool.icon} alt={tool.name} class='h-full w-full object-contain' />
+                  </div>
+                ) : (
+                  <Svg src={tool.icon} class='size-10 rounded-lg bg-card fill-foreground p-2' />
+                )}
+              </>
+            )}
+            <div class='z-20 flex flex-col'>
+              <div class='font-medium text-foreground'>{tool.name}</div>
+              <div class='font-normal'>{tool.description}</div>
+            </div>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</div>

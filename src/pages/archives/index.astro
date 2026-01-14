@@ -1,0 +1,52 @@
+---
+import { PostPreview } from 'astro-pure/components/pages'
+import { getBlogCollection, groupCollectionsByYear, sortMDByDate } from 'astro-pure/server'
+import { Button } from 'astro-pure/user'
+import PageLayout from '@/layouts/BaseLayout.astro'
+
+export const prerender = true
+
+const allPosts = await getBlogCollection()
+const allPostsByDate = sortMDByDate(allPosts)
+const allPostsByYear = groupCollectionsByYear(allPostsByDate)
+
+const meta = {
+  description: 'A list of all the years of creating my posts',
+  title: 'Archives'
+}
+---
+
+<PageLayout {meta}>
+  <Button title='Back' href='/blog' variant='back' />
+
+  <main class='mt-6 lg:mt-10'>
+    <div id='content-header' class='animate'>
+      <h1 class='mb-6 text-3xl font-medium'>Archives</h1>
+    </div>
+
+    {allPosts.length === 0 && <p>No posts yet.</p>}
+
+    <section id='content' class='animate' aria-label='Blog post list'>
+      {
+        allPostsByYear.map(([year, posts]) => (
+          <div class='relative mt-20'>
+            <h2
+              class='absolute -start-6 -top-16 z-0 text-9xl font-bold text-transparent opacity-12 dark:opacity-25'
+              style='-webkit-text-stroke-width:2px;-webkit-text-stroke-color:hsl(var(--foreground)/var(--un-text-opacity))'
+            >
+              <samp>{year}</samp>
+            </h2>
+            <p class='px-5 text-muted-foreground'>
+              {posts.length} post{posts.length > 1 && 's'}
+            </p>
+            <ul class='flex flex-col text-start'>
+              {posts.map((p) => (
+                <PostPreview post={p} class='border-0 bg-transparent py-2' />
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </section>
+  </main>
+</PageLayout>

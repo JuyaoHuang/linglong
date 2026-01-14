@@ -1,0 +1,103 @@
+---
+import type { ImageMetadata } from 'astro'
+import { Image } from 'astro:assets'
+
+import type { iconsType } from 'astro-pure/types'
+import { Icon } from 'astro-pure/user'
+import { cn } from 'astro-pure/utils'
+
+interface Project {
+  image?: string
+  name: string
+  description: string
+  links: {
+    type: string
+    href: string
+  }[]
+}
+
+interface Props {
+  class?: string
+  projects: Project[]
+}
+const { class: className, projects, ...props } = Astro.props
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/projects/*.{jpeg,jpg,png,gif,avif.webp,webp}'
+)
+const projectIconSet: Record<string, iconsType> = {
+  github: 'github-circle',
+  site: 'earth',
+  doc: 'document',
+  release: 'package'
+}
+---
+
+<div class={className} {...props}>
+  <div class='grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2 sm:gap-y-4'>
+    {
+      projects.map((project) => {
+        var imagePath = null
+        if (project.image) {
+          imagePath = '/src/assets/projects/' + project.image
+          if (!images[imagePath])
+            throw new Error(
+              `"${imagePath}" does not exist in glob: "src/assets/projects/*.{jpeg,jpg,png,gif,avif,webp}"`
+            )
+        }
+
+        return (
+          <div class='relative overflow-hidden rounded-xl border'>
+            {imagePath && (
+              <Image
+                class='absolute end-0 z-0 m-0 h-full w-1/2 object-cover opacity-40'
+                src={images[imagePath]()}
+                alt={project.name}
+                loading='lazy'
+                style={{
+                  maskImage:
+                    'linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)',
+                  msMaskImage:
+                    '-ms-linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)',
+                  WebkitMaskImage:
+                    '-webkit-linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)'
+                }}
+              />
+            )}
+            <div
+              class={cn(
+                'relative z-10 flex flex-col gap-y-1 px-2 py-1.5 sm:px-3 sm:py-2',
+                imagePath && 'me-20'
+              )}
+            >
+              <a
+                class='line-clamp-1 font-medium text-foreground no-underline transition-colors'
+                href={project.links[0].href}
+                target='_blank'
+              >
+                {project.name}
+              </a>
+              <div class='line-clamp-2 leading-snug text-muted-foreground sm:h-12'>
+                {project.description}
+              </div>
+              <div class='flex flex-row items-center gap-x-2 sm:gap-x-3'>
+                {project.links.map((link) => {
+                  const icon = projectIconSet[link.type]
+                  return (
+                    <a
+                      href={link.href}
+                      class='rounded-full bg-muted p-1 text-muted-foreground transition-colors sm:p-1.5'
+                      aria-label={link.type}
+                      target='_blank'
+                    >
+                      <Icon class='size-5' name={icon} />
+                    </a>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )
+      })
+    }
+  </div>
+</div>

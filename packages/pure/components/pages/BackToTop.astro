@@ -1,0 +1,146 @@
+---
+import { Icon } from '../user'
+
+const { header: headerName, content: contentName, needPercent = true } = Astro.props
+---
+
+<div
+  class='z-10 group fixed bottom-8 end-4 transition-all flex flex-col gap-y-4 sm:end-8'
+  id='action-buttons'
+>
+  <slot name='other-icons' />
+  <scroll-button>
+    <button
+      aria-label='Back to Top'
+      class='relative size-10 flex items-center justify-center rounded-full border-2 border-transparent bg-muted text-muted-foreground duration-300 hover:border-border/75 sm:size-12 opacity-0'
+      id='to-top-btn'
+    >
+      <div
+        class='top-text absolute bottom-0 end-0 start-0 top-0 flex items-center justify-center group-[.ended]:opacity-0'
+      >
+        <span class='text'>10</span>
+        <span class='text-xs'>%</span>
+      </div>
+      <Icon name='up' class='top-icon group-[.ended]:opacity-100' />
+    </button>
+  </scroll-button>
+</div>
+
+<script is:inline define:vars={{ headerName, contentName, needPercent }}>
+  class ScrollBtn extends HTMLElement {
+    actionBtns
+    scrollBtn
+    scrollPercentEl
+    targetHeader
+    articleEl
+    scrollHeight = 0
+    articleTop = 0
+    clientHeight = 0
+    ticking = false
+    needPercent = true
+
+    calculateScrollPercent() {
+      const scrollTop = Math.max(0, window.scrollY || document.documentElement.scrollTop)
+      // Before article
+      if (scrollTop < this.articleTop) return 0
+      const maxScrollable = this.scrollHeight - this.clientHeight
+      // After article
+      if (maxScrollable <= 0) return 100
+      const progress = Math.min(scrollTop - this.articleTop, maxScrollable)
+      return Math.round((progress / maxScrollable) * 100)
+    }
+
+    updateScrollPercent() {
+      const percent = this.calculateScrollPercent()
+      this.scrollPercentEl.textContent = percent.toString()
+      this.actionBtns.classList.toggle('ended', percent >= 100)
+      this.ticking = false
+    }
+
+    connectedCallback() {
+      this.needPercent = needPercent
+      this.actionBtns = document.getElementById('action-buttons')
+      this.scrollBtn = this.querySelector('button#to-top-btn')
+      this.scrollPercentEl = this.scrollBtn.querySelector('.top-text .text')
+      this.targetHeader = document.getElementById(headerName)
+      this.articleEl = document.getElementById(contentName)
+
+      if (!this.articleEl) {
+        console.error(`Element with ID ${contentName} not found.`)
+        needPercent = false
+      }
+      // Scroll to top action
+      this.scrollBtn.addEventListener('click', this)
+      // Observe header visibility
+      if (this.targetHeader) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            this.actionBtns.classList.toggle('show', !entry.isIntersecting)
+          })
+        })
+        observer.observe(this.targetHeader)
+      } else {
+        console.error(`Element with ID ${headerName} not found.`)
+      }
+      // Scroll percent update
+      if (this.needPercent) {
+        this.scrollHeight = this.articleEl.scrollHeight
+        this.articleTop = this.articleEl.offsetTop
+        this.clientHeight = document.documentElement.clientHeight
+
+        document.addEventListener('scroll', () => {
+          if (!this.ticking) {
+            requestAnimationFrame(() => this.updateScrollPercent())
+            this.ticking = true
+          }
+        })
+      } else {
+        this.actionBtns.classList.add('ended')
+      }
+    }
+
+    handleEvent(event) {
+      if (event.type === 'click') {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    }
+  }
+  customElements.define('scroll-button', ScrollBtn)
+</script>
+
+<style>
+  #action-buttons {
+    transform: translateY(4rem);
+    &.show {
+      transform: translateY(0);
+      & #to-top-btn {
+        opacity: 1;
+      }
+    }
+
+    /* To top button status change */
+    & #to-top-btn {
+      & .top-text,
+      & .top-icon {
+        transition-property: opacity;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 150ms;
+      }
+      & .top-text {
+        opacity: 1;
+      }
+      & .top-icon {
+        opacity: 0;
+      }
+    }
+    &.ended #to-top-btn,
+    & #to-top-btn:hover {
+      & .top-text {
+        opacity: 0;
+      }
+      & .top-icon {
+        opacity: 1;
+      }
+    }
+  }
+</style>
