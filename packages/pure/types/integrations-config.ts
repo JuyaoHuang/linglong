@@ -57,7 +57,7 @@ export const IntegrationConfigSchema = () =>
       /** The emoji to use for the Waline comment system. */
       emoji: z.array(z.string()).optional(),
       /** The search to use for the Waline comment system. */
-      search: z.boolean().default(false),
+      search: z.boolean().default(false).optional(),
       /** Additional configurations for the Waline comment system. */
       additionalConfigs: z.record(z.string(), z.any()).default({})
     })
