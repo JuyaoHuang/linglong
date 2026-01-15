@@ -180,7 +180,7 @@ export const integ: IntegrationUserConfig = {
     showMeta: false,
     // Refer https://waline.js.org/en/guide/features/emoji.html
     // 表情包
-    emoji: ['bmoji', 'Bilibili'],
+    emoji: ['bmoji', 'weibo','tw-emoji'],
     // Refer https://waline.js.org/en/reference/client/props.html
     additionalConfigs: {
       // search: false,

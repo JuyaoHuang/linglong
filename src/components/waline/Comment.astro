@@ -38,10 +38,13 @@ const { class: className } = Astro.props
         globalThis as unknown as { __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: boolean }
       ).__VUE_PROD_HYDRATION_MISMATCH_DETAILS__ = false
 
-      const emoji = walineConfig.emoji?.map(
-        (preset) => `${config.npmCDN}/@waline/emojis@1.4.0/${preset}` as WalineEmojiPresets
-      )
+      // const emoji = walineConfig.emoji?.map(
+      //   (preset) => `${config.npmCDN}/@waline/emojis@1.4.0/${preset}` as WalineEmojiPresets
+      // )
 
+      const emoji = walineConfig.emoji?.map(
+        (preset) => `//unpkg.com/@waline/emojis@1.4.0/${preset}` as WalineEmojiPresets
+      )
       walineInit({
         el: '#waline',
         serverURL: walineConfig.server || '',
