@@ -2,17 +2,18 @@
 import config from 'virtual:config'
 
 import { Icon } from '../user'
-
+// 获取页脚配置和社交链接配置
 const footerConf = config.footer
 let social = footerConf.social || {}
-
+// 如果配置里没写 RSS，代码会自动帮你加一个指向 /rss.xml 的链接
 // If the list does not contain rss, add it
 if (!social.rss)
   social.rss = {
     label: 'RSS',
     url: '/rss.xml'
   }
-
+// 筛选自定义链接
+// 它会寻找配置中 pos (position) 为 1 的链接放在左侧
 const footerLink1 = footerConf.links?.filter(({ pos }) => pos === 1) || []
 ---
 
@@ -37,7 +38,7 @@ const footerLink1 = footerConf.links?.filter(({ pos }) => pos === 1) || []
         <div>
           {config.footer.year}
           {config.author}
-          {
+          <!-- {
             footerConf.links && footerConf.links.length > 0 && (
               <>
                 &
@@ -52,9 +53,9 @@ const footerLink1 = footerConf.links?.filter(({ pos }) => pos === 1) || []
                 </span>
               </>
             )
-          }
+          } -->
         </div>
-        {
+        <!-- {
           footerConf.credits && (
             <span>
               <a href='https://github.com/withastro/astro' target='_blank'>Astro</a>
@@ -63,7 +64,7 @@ const footerLink1 = footerConf.links?.filter(({ pos }) => pos === 1) || []
               theme powered
             </span>
           )
-        }
+        } -->
       </div>
 
       {/* Social Brands */}

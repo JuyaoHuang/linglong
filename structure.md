@@ -134,17 +134,6 @@ src/
 │   └── BaseHead.astro      # 基础 Head 组件
 │
 ├── content/                # 内容集合
-│   ├── blog/               # 博客文章
-│   │   ├── 3d-rendering/
-│   │   ├── markdown/
-│   │   ├── markdown-zh/
-│   │   ├── music-journey/
-│   │   ├── improve-concentration/
-│   │   └── draft.md
-│   └── docs/               # 文档
-│       ├── setup/
-│       ├── integrations/
-│       └── advanced/
 │
 ├── layouts/                # 页面布局
 │   ├── BaseLayout.astro    # 基础布局

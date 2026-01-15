@@ -47,9 +47,3 @@ pages
 
 **请注意**：先完成 fmt 字段的改写，再考虑 categories 的 CSS 样式。
 
-**当前步骤**
-✻ 创建分类工具函数文件… (esc to interrupt · ctrl+t to hide todos · 3m 33s · ↓ 706 tokens)
-  ⎿  ☒ 修改 content.config.ts 添加分类字段
-     ☐ 创建分类工具函数文件（类似 webTest 的 content.ts）
-     ☐ 创建 categories 页面路由结构
-     ☐ 在 /blog 页面添加 Categories 组件
