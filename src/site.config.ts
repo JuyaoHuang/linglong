@@ -103,14 +103,12 @@ export const integ: IntegrationUserConfig = {
   // https://astro-pure.js.org/docs/integrations/links
   links: {
     // Friend logbook
+    // 友链日志 - 显示在友链页面的动态
     logbook: [
-      { date: '2025-03-16', content: 'Is there a leakage?' },
-      { date: '2025-03-16', content: 'A leakage of what?' },
-      { date: '2025-03-16', content: 'I have a full seat of water, like, full of water!' },
-      { date: '2025-03-16', content: 'Must be the water.' },
-      { date: '2025-03-16', content: "Let's add that to the words of wisdom." }
+      { date: '2026-01-15', content: '我们可以成为朋友么🤗' },
     ],
     // Yourself link info
+    // 你的站点信息 - 供他人添加友链时参考
     applyTip: [
       { name: 'Name', val: theme.title },
       { name: 'Desc', val: theme.description || 'Null' },
@@ -118,6 +116,7 @@ export const integ: IntegrationUserConfig = {
       { name: 'Avatar', val: 'https://www.juayohuang.top' }
     ],
     // Cache avatars in `public/avatars/` to improve user experience.
+    // 是否缓存友链头像到本地
     cacheAvatar: false
   },
   // [Search]
@@ -128,7 +127,7 @@ export const integ: IntegrationUserConfig = {
   quote: {
     // - Hitokoto
     // https://developer.hitokoto.cn/sentence/#%E8%AF%B7%E6%B1%82%E5%9C%B0%E5%9D%80
-    server: 'https://v1.hitokoto.cn/?c=i',
+    server: 'https://v1.hitokoto.cn/?c=i&c=d',
     target: `(data) => (data.hitokoto || 'Error')`
     // - Quoteable
     // https://github.com/lukePeavey/quotable
@@ -140,16 +139,24 @@ export const integ: IntegrationUserConfig = {
   },
   // [Typography]
   // https://unocss.dev/presets/typography
+  // 配置文章内容的排版样式
+  // 修改 blockquoteStyle 改变引用块字体样式
+  // 修改 inlineCodeBlockStyle 改变行内代码显示风格
   typography: {
-    class: 'prose text-base',
+    class: 'prose text-base', // UnoCSS 类名
     // The style of blockquote font `normal` / `italic` (default to italic in typography)
-    blockquoteStyle: 'italic',
+    // 引用块样式: '正常' / '斜体'
+    blockquoteStyle: 'normal',
     // The style of inline code block `code` / `modern` (default to code in typography)
-    inlineCodeBlockStyle: 'modern'
+    // 行内代码样式: 'code' / 'modern'
+    inlineCodeBlockStyle: 'code'
   },
   // [Lightbox]
   // A lightbox library that can add zoom effect
   // https://astro-pure.js.org/docs/integrations/others#medium-zoom
+  // 为图片添加点击放大效果
+  // 设置 enable: false 禁用图片放大功能
+  // 修改 selector 改变哪些图片可以放大
   mediumZoom: {
     enable: true, // disable it will not load the whole library
     selector: '.prose .zoomable',
@@ -158,24 +165,32 @@ export const integ: IntegrationUserConfig = {
     }
   },
   // Comment system
+  // 为文章添加评论功能
+  // 使用方法:
+  // 1. 部署自己的 Waline 服务器（参考 Waline 官方文档）
+  // 2. 修改 server 为你的服务器地址
+  // 3. 根据需要调整 additionalConfigs 配置
   waline: {
-    enable: true,
+    enable: true, // 启用/禁用
     // Server service link
-    server: 'https://astro-theme-pure-waline.arthals.ink/',
+    // Waline 服务器地址
+    server: 'https://waline.juayohuang.top/',
     // Show meta info for comments
+    // 是否显示评论元信息
     showMeta: false,
     // Refer https://waline.js.org/en/guide/features/emoji.html
-    emoji: ['bmoji', 'weibo'],
+    // 表情包
+    emoji: ['bmoji', 'Bilibili'],
     // Refer https://waline.js.org/en/reference/client/props.html
     additionalConfigs: {
       // search: false,
-      pageview: true,
-      comment: true,
+      pageview: true, // 页面浏览量统计
+      comment: true, // 评论功能
       locale: {
         reaction0: 'Like',
         placeholder: 'Welcome to comment. (Email to receive replies. Login is unnecessary)'
       },
-      imageUploader: false
+      imageUploader: false // 图片上传功能
     }
   }
 }
