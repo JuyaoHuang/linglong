@@ -47,6 +47,7 @@ const { class: className } = Astro.props
         serverURL: walineConfig.server || '',
         emoji,
         reaction: ['/icons/heart-item.svg'],
+        search: false,
         ...walineConfig.additionalConfigs
       })
     }
