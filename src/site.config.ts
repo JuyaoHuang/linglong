@@ -170,6 +170,7 @@ export const integ: IntegrationUserConfig = {
   // 1. 部署自己的 Waline 服务器（参考 Waline 官方文档）
   // 2. 修改 server 为你的服务器地址
   // 3. 根据需要调整 additionalConfigs 配置
+  // https://github.com/JuyaoHuang/lingLong/blob/main/public/favicon/android-chrome-512x512.png
   waline: {
     enable: true, // 启用/禁用
     // Server service link
