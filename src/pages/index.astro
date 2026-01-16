@@ -11,9 +11,10 @@ import Section from '@/components/home/Section.astro'
 import SkillLayout from '@/components/home/SkillLayout.astro'
 import config from '@/site-config'
 
-const languages = ['Python', 'JavaScript', 'CSS', 'Shell']
-const frontend = ['TypeScript', 'Vite', 'Webpack', 'Astro']
-const backend = ['Vercel', 'Waline']
+const Web = ['Vue.js', 'Astro', 'Streamlit', 'node.js', 'Vite', 'JavaScript']
+const programming = ['FastAPI', 'PyTorch', 'Python', 'C++', 'Pydantic', 'SQL', 'Bash']
+const tools = ['VS Code', 'PyCharm', 'CLion', 'Vim', 'Git', 'Docker', 'Linux', 'Nginx']
+const others = ['markdown', 'LaTex']
 
 const MAX_POSTS = 10
 const allPosts = await getBlogCollection()
@@ -187,9 +188,10 @@ if (!images[imagePath])
       </Section>
 
       <Section title='Skills'>
-        <SkillLayout title='Languages' skills={languages} />
-        <SkillLayout title='Frontend' skills={frontend} />
-        <SkillLayout title='Backend' skills={backend} />
+        <SkillLayout title='Programming' skills={programming} />
+        <SkillLayout title='Tools' skills={tools} />
+        <SkillLayout title='Web' skills={Web} />
+        <SkillLayout title='Others' skills={others} />
       </Section>
     </div>
     <Quote class='mt-12' />
