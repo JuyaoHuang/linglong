@@ -40,8 +40,8 @@ const headings = [
     />
   </p> -->
   <p>
-    If you think it would be useful or interesting to collaborate on a project, you can donate to
-    support my work or contact me to discuss a project.
+    If you find my projects useful, you can buy me a coffee to say thanks! 
+    Got a cool idea? Drop me a line—I'd love to chat about it.
   </p>
   <Button title='Checkout sponsorship' class='w-fit' href='#sponsorship'>
     <Icon class='size-5' name='receive-money' slot='before' />
@@ -67,21 +67,21 @@ const headings = [
   <ProjectSection
     projects={[
       {
-        name: '🧩 rehype-autolink-headings-simple',
-        description: 'A simple version of rehype-autolink-headings',
+        name: 'Smart Gaze',
+        description: 'RK3568 NPU-accelerated face recognition access control with Web management.',
         links: [
-          { type: 'github', href: 'https://github.com/cworld1/rehype-autolink-headings-simple' },
-          {
-            type: 'release',
-            href: 'https://www.npmjs.com/package/rehype-autolink-headings-simple'
-          }
+          { type: 'github', href: 'https://github.com/JuyaoHuang/SmartGaze' }
+          // {
+          //   type: 'release',
+          //   href: 'https://www.npmjs.com/package/rehype-autolink-headings-simple'
+          // }
         ]
       },
       {
-        name: 'Gaussian NB',
+        name: 'LLM-vtuber',
         description:
-          'Simulating the Parsimonious Bayesian Algorithm with Python and Finding the Probability Prediction of Breast Cancer ',
-        links: [{ type: 'github', href: 'https://github.com/cworld1/gaussian-nb' }]
+          '您的全平台、全离线 Live2D 桌面语音 AI 伴侣。',
+        links: [{ type: 'github', href: 'https://github.com/Open-LLM-VTuber/Open-LLM-VTuber' }]
       }
     ]}
   />
@@ -91,27 +91,65 @@ const headings = [
     class='my-2'
     projects={[
       {
-        name: 'R Learning',
-        description: 'Some notes and code about learning R language',
+        name: '深度学习框架 PyTorch',
+        description: 'Some notes and code about learning Deep Learning',
         links: [
-          { type: 'github', href: 'https://github.com/cworld1/r-learning' },
-          { type: 'site', href: 'https://cworld1.github.io/r-learning' }
+          { type: 'github', href: 'https://github.com/JuyaoHuang/blogs/tree/main/AI/pytorch' },
+          { type: 'site', href: 'https://www.juayohuang.top/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6' }
         ]
       },
       {
-        name: 'CS 213 Learning',
-        description: 'Notes, code and experiences for Introduction to Computer Systems course',
+        name: '深度学习实验',
+        description: 'Neural Networks and Deep Learning Course Experiment Codes and Reports',
+        links: [
+          { type: 'github', href: 'https://github.com/JuyaoHuang/BUPTDeepLearning' },
+          { type: 'site', href: 'https://www.juayohuang.top/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/deeplearning' }
+        ]
+      },
+      {
+        name: '通信原理',
+        description: 'Some notes and exercise about learning Communication Principle',
         links: [
           {
-            type: 'github',
-            href: 'https://github.com/zhuozhiyongde/Introduction-To-Computer-System-2023Fall-PKU'
+            type: 'site',
+            href: 'https://www.juayohuang.top/categories/%E7%9F%A5%E8%AF%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86'
           }
         ]
-      }
+      },
+      {
+        name: '计算机网络',
+        description: 'Some notes and exercises about learning Computer Networks',
+        links: [
+          {
+            type: 'site',
+            href: 'https://www.juayohuang.top/categories/%E7%9F%A5%E8%AF%86%E5%BA%93/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C'
+          }
+        ]
+      },
+      {
+        name: '微机原理',
+        description: 'Some notes and exercises about learning Microcomputer Principles',
+        links: [
+          {
+            type: 'site',
+            href: 'https://www.juayohuang.top/categories/%E7%9F%A5%E8%AF%86%E5%BA%93/%E5%BE%AE%E6%9C%BA%E5%8E%9F%E7%90%86'
+          }
+        ]
+      },
+      {
+        name: '信息论',
+        description: 'Some notes and exercises about learning Information Theory',
+        links: [
+          {
+            type: 'site',
+            href: 'https://www.juayohuang.top/categories/%E7%9F%A5%E8%AF%86%E5%BA%93/%E4%BF%A1%E6%81%AF%E8%AE%BA'
+          }
+        ]
+      },
     ]}
   />
 
-  <h2 id='others'>Others</h2>
+  <!-- <h2 id='others'>Others</h2>
   <ProjectSection
     projects={[
       {
@@ -125,7 +163,7 @@ const headings = [
         links: [{ type: 'github', href: 'https://github.com/zhuozhiyongde' }]
       }
     ]}
-  />
+  /> -->
 
   <h2 id='gpg-signature'>GPG Signature</h2>
   <p>
@@ -136,7 +174,8 @@ const headings = [
   </Button>
 
   <h2 id='sponsorship'>Sponsorship</h2>
-  <p>Chinese methods: <a href="https://afdian.com/a/cworld" target="_blank">Afadian</a>, Wechat or Alipay </p>
+  <!-- <a href="https://afdian.com/a/cworld" target="_blank">Afadian</a>, -->
+  <p>Chinese methods: Wechat or Alipay </p>
   <Sponsorship
     methods={[
       { name: 'WeChat', icon: 'wechat-pay', image: wechat },
@@ -144,12 +183,12 @@ const headings = [
     ]}
   />
   <!-- <p>Global methods: <a href="https://ko-fi.com/cworld0" target="_blank">Ko-fi</a> </p> -->
-  <p>Please leave a message or contact me proactively after sponsorship. My email is:
+  <!-- <p>Please leave a message or contact me proactively after sponsorship. My email is:
     <code style='cursor: pointer'
       onclick='const m=atob(this.textContent);alert(m);window.open(`mailto:${m}`,"_blank")'
     >dGluZ2h1YTUyMjZAMTYzLmNvbQ==</code>
     (click code to transform base64).
-  </p>
+  </p> -->
   <!-- <p>Thanks to the following sponsors:</p>
   <Sponsors
     progressMax={50}

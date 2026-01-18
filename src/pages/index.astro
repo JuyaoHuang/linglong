@@ -10,6 +10,8 @@ import ProjectCard from '@/components/home/ProjectCard.astro'
 import Section from '@/components/home/Section.astro'
 import SkillLayout from '@/components/home/SkillLayout.astro'
 import config from '@/site-config'
+import BuptImg from '@/assets/education/BUPT.svg'
+import NnsImg from '@/assets/education/nnsz.png'
 
 const Web = ['Vue.js', 'Astro', 'Streamlit', 'node.js', 'Vite', 'JavaScript']
 const programming = ['FastAPI', 'PyTorch', 'Python', 'C++', 'Pydantic', 'SQL', 'Bash']
@@ -140,7 +142,7 @@ if (!images[imagePath])
           date='September 2023 - Present'
           href='https://www.bupt.edu.cn/'
         >
-        <img class="absolute end-0 z-0 m-0 -my-3 h-full w-1/2 object-cover opacity-40" src="src/assets/education/BUPT.svg">
+        <Image src={BuptImg} alt="BUPT" class="absolute end-0 z-0 m-0 -my-3 h-full w-1/2 object-cover opacity-40" />
           {
             /* <ul class='ms-4 list-disc text-muted-foreground'>
             <li>
@@ -158,7 +160,7 @@ if (!images[imagePath])
           date='September 2020 - July 2023'
           href='https://nn3z.nnedu.com/'
         >
-         <img class="absolute end-0 z-0 m-0 -my-3 h-full w-1/2 object-cover opacity-40" src="src/assets/education/nnsz.png">
+         <Image src={NnsImg} alt="nnsz" class="absolute end-0 z-0 m-0 -my-3 h-full w-1/2 object-cover opacity-40" />
         </Card>
       </Section>
 
