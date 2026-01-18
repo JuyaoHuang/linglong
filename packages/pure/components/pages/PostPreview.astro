@@ -90,10 +90,10 @@ const postDate = data.updatedDate ?? data.publishDate
               {data.description}
             </p>
             <div class='py-2 flex items-center gap-2 text-sm italic leading-4 text-muted-foreground'>
-              {/* reading time */}
+              {/* word count */}
               <span class='flex items-center gap-1'>
                 <Icon name='time' class='size-4' />
-                {remarkPluginFrontmatter.minutesRead}
+                {remarkPluginFrontmatter.words} words
               </span>
               {/* language */}
               {data.language && (
