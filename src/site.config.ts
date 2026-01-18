@@ -65,7 +65,7 @@ export const theme: ThemeUserConfig = {
       // Registration link
       {
         title: '萌ICP备20266001号',
-        link: 'https://icp.gov.moe/?keyword=20266001"',
+        link: 'https://icp.gov.moe/?keyword=20266001',
         style: 'text-sm' // Uno/TW CSS class
       },
       // Privacy Policy link
