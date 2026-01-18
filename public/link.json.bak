@@ -9,6 +9,12 @@
           "intro": "所见高山远木，阔云流风；所幸岁月盈余，了无拘束",
           "link": "https://arthals.ink/",
           "avatar": "https://cdn.arthals.ink/Arthals.png"
+        },
+        {
+          "name": "CWorld Site",
+          "intro": "求知若愚，虚怀若谷",
+          "link": "https://cworld0.com/",
+          "avatar": "https://cravatar.cn/avatar/1ffe42aa45a6b1444a786b1f32dfa8aa?s=200"
         }
       ]
     },
@@ -25,8 +31,9 @@
           "name": "BlogFinder",
           "intro": "聚合优秀的个人博客，发现有趣的灵魂",
           "link": "https://bf.zzxworld.com/s",
-          "avatar": "https://bf.zzxworld.com/images/favicon.png"
+          "avatar": "https://bf.zzxworld.com/"
         }
+        
       ]
     }
   ]
