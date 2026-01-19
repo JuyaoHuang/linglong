@@ -1,12 +1,13 @@
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
 import vercel from '@astrojs/vercel'
 import node from '@astrojs/node';
+import mermaid from 'astro-mermaid'
 import AstroPureIntegration from 'astro-pure'
 import { defineConfig, fontProviders } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 // 如果要部署到 Vercel，注意将适配器 adapter: node({ 改为 adapter: vercel()
-
+// npm install astro-mermaid mermaid --registry=https://registry.npmmirror.com/
 // Local integrations
 import rehypeAutolinkHeadings from './src/plugins/rehype-auto-link-headings.ts'
 // Shiki
@@ -102,6 +103,11 @@ export default defineConfig({
 
   // [Integrations]
   integrations: [
+    // Mermaid 图表支持 - 必须放在 AstroPureIntegration 之前
+    mermaid({
+      theme: 'default',
+      autoTheme: true // 自动根据 data-theme 切换明暗主题
+    }),
     // astro-pure will automatically add sitemap, mdx & unocss
     // sitemap(),
     // mdx(),
