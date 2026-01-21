@@ -1,3 +1,9 @@
+---
+title: '项目结构文档'
+description: '详解 astro-theme-pure 主题的项目结构'
+order: 11
+---
+
 # Astro Theme Pure - 项目结构文档
 
 ## 项目概览
@@ -189,6 +195,7 @@ src/
 ### content.config.ts - 内容集合定义
 
 **Blog 集合**:
+
 - 必需字段: title、description、publishDate
 - 可选字段: updatedDate、heroImage、tags、language、draft、comment
 

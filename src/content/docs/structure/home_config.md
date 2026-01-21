@@ -1,3 +1,10 @@
+---
+title: '配置文件分析'
+description: '配置文件详解'
+order: 11
+---
+
+
 # 主页配置分析 (Homepage Configuration Analysis)
 
 ## 概述 (Overview)
@@ -89,7 +96,7 @@ integ 包含的功能模块
 作用: 配置友情链接页面的内容
 
 配置项:
-```
+```ts
 links: {
   // 友链日志 - 显示在友链页面的动态
   logbook: [
@@ -117,7 +124,10 @@ links: {
 作用: 启用/禁用站内搜索功能
 
 配置:
+
+```ts
 pagefind: true  // true启用，false 禁用
+```
 
 说明: 需要 prerender: true 才能正常工作
 
@@ -126,10 +136,13 @@ pagefind: true  // true启用，false 禁用
 作用: 在页脚显示随机引言
 
 当前配置: 使用 DummyJSON API
+
+```ts
 quote: {
   server: 'https://dummyjson.com/quotes/random',
   target: `(data) => (data.quote.length > 80 ? \`${data.quote.slice(0, 80)}...\` : data.quote || 'Error')`
 }
+```
 
 可选 API:
 - Hitokoto (一言) - 中文引言
@@ -166,7 +179,7 @@ typography: {
 作用: 为图片添加点击放大效果
 
 配置项:
-```
+```ts
 mediumZoom: {
   enable: true,  // 启用/禁用
   selector: '.prose .zoomable',  // CSS选择器
@@ -184,7 +197,7 @@ mediumZoom: {
 作用: 为文章添加评论功能
 
 配置项:
-```
+```ts
 waline: {
   enable: true,  // 启用/禁用
   server: 'https://astro-theme-pure-waline.arthals.ink/',  // Waline 服务器地址
