@@ -38,7 +38,7 @@ if (!images[imagePath])
       <Image
         src={images[imagePath]()}
         alt={config.logo.alt || 'Profile'}
-        class='h-28 w-auto rounded-full border p-1'
+        class='avatar-rotate h-28 w-auto rounded-full border p-1'
         loading='eager'
         fetchpriority='high'
       />
@@ -213,3 +213,53 @@ if (!images[imagePath])
     <Quote class='mt-12' />
   </main>
 </PageLayout>
+
+<style>
+  .avatar-rotate {
+    transition: transform 0.5s ease-out;
+  }
+</style>
+
+<script>
+  const avatar = document.querySelector('.avatar-rotate') as HTMLElement
+  if (avatar) {
+    let rotation = 0
+    let speed = 0
+    let animationId: number | null = null
+    const maxSpeed = 99999
+    // const acceleration = 0.003
+
+    const animate = () => {
+      if (speed >= maxSpeed) {
+        rotation = 0
+        speed = 0
+        avatar.style.transform = 'rotate(0deg)'
+        animationId = null
+        return
+      }
+
+      speed = speed * 1.001 + 0.003
+      rotation += speed
+      avatar.style.transform = `rotate(${rotation}deg)`
+      animationId = requestAnimationFrame(animate)
+    }
+
+    avatar.addEventListener('mouseenter', () => {
+      if (!animationId) {
+        rotation = 0
+        speed = 0
+        animate()
+      }
+    })
+
+    avatar.addEventListener('mouseleave', () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId)
+        animationId = null
+      }
+      rotation = 0
+      speed = 0
+      avatar.style.transform = 'rotate(0deg)'
+    })
+  }
+</script>
