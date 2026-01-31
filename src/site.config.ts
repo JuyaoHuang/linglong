@@ -7,7 +7,7 @@ export const theme: ThemeUserConfig = {
   /** Will be used in index page & copyright declaration */
   author: 'Juyao Huang',
   /** Description metadata for your website. Can be used in page metadata. */
-  description: '平凡的世界，平凡的人生',
+  description: '事以密成，语以泄败，是不可多言，福不可多晒。',
   /** The default favicon for your site which should be a path to an image in the `public/` directory. */
   favicon: '/favicon/favicon.svg',
   /** The default social card image for your site which should be a path to an image in the `public/` directory. */
