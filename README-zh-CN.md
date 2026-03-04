@@ -1,99 +1,151 @@
-# Astro Theme Pure
+# LingLong
 
-[English](./README.md) | 简体中文
+基于 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) 构建的个人博客站点，简洁、快速、功能丰富。
 
-一个由 Astro 构建的，轻便简洁、快速强大的博客 & 文档主题。
+[![GitHub deployments](https://img.shields.io/github/deployments/JuyaoHuang/lingLong/production?style=flat&logo=vercel&label=vercel)](https://www.juayohuang.top/)
+[![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?style=flat&logo=astro)](https://astro.build/)
+[![License](https://img.shields.io/github/license/JuyaoHuang/lingLong?style=flat)](./LICENSE)
 
-[![GitHub deployments](https://img.shields.io/github/deployments/cworld1/astro-theme-pure/production?style=flat&logo=vercel&label=vercel)](https://astro-pure.js.org/)
-[![NPM Version](https://img.shields.io/npm/v/astro-pure?logo=npm&style=flat)](https://www.npmjs.com/package/astro-pure)
-[![GitHub Release](https://img.shields.io/github/v/release/cworld1/astro-theme-pure?include_prereleases&style=flat&label=template)](https://github.com/cworld1/astro-theme-pure/releases)
-[![GitHub License](https://img.shields.io/github/license/cworld1/astro-theme-pure?style=flat)](https://github.com/cworld1/astro-theme-pure/blob/main/LICENSE)
+[English](./README.md)
 
-![image](./.github/assets/header.webp)
-![image](./.github/assets/body.webp)
+> 事以密成，语以泄败，是不可多言，福不可多晒。
 
-> [!NOTE]
-> 已知问题：1. Head 标签和自定义选项仍在开发中（已经暴露模板直接改）；2. 主题模板 v4.0.5^ CSS 预设被换到 PresetMini。如有任何问题，请及时反馈。
+## 功能特性
 
-## 简介
+- **博客系统** — 支持分类（两级层级）、标签、归档、分页
+- **全文搜索** — 由 [Pagefind](https://pagefind.app/) 驱动，无需后端
+- **评论系统** — 集成 [Waline](https://waline.js.org/)，支持浏览量统计与多种 emoji
+- **数学公式** — 通过 [KaTeX](https://katex.org/) 渲染 LaTeX 数学公式
+- **流程图表** — 通过 [Mermaid](https://mermaid.js.org/) 渲染图表，支持明暗主题自动切换
+- **代码高亮** — Shiki 驱动，GitHub 明暗双主题，内置折叠、复制、标题、语言标记、diff 等增强
+- **图片放大** — [medium-zoom](https://github.com/francoischalifour/medium-zoom) 提供点击放大效果
+- **友情链接** — 带动态日志的友链页面
+- **项目展示** — 个人项目展示页
+- **内容分享** — 支持微博、X、Bluesky 一键分享
+- **随机一言** — 首页底部展示 [Hitokoto](https://hitokoto.cn/) 随机语录
+- **RSS 订阅** — 博客与文档均提供 RSS feed
+- **SEO 友好** — 自动生成 sitemap、robots.txt、社交卡片
+- **深色模式** — 自动跟随系统或手动切换
+- **响应式设计** — 适配移动端与桌面端
+- **字体优化** — 通过 Fontshare 加载 Satoshi 字体，自动预加载
+- **MDX 支持** — 在 Markdown 中使用组件
 
-查看 [预览 →](https://astro-pure.js.org/)
+## 技术栈
 
-### :fire: 特性
+| 类别 | 技术 |
+|------|------|
+| 框架 | [Astro](https://astro.build/) 5.x |
+| 样式 | [UnoCSS](https://unocss.dev/) |
+| 语言 | TypeScript |
+| 部署 | [Vercel](https://vercel.com/) |
+| 包管理 | [Bun](https://bun.sh/) |
+| 主题包 | [astro-pure](https://www.npmjs.com/package/astro-pure) |
 
-- [x] :rocket: 快速高性能
-- [x] :star: 简单干净的设计
-- [x] :iphone: 响应式设计
-- [x] :mag: 使用 [pagefind](https://pagefind.app/) 构建的全站搜索
-- [x] :world_map: 站点地图和 RSS 订阅
-- [x] :spider_web: 友好的 SEO
-- [x] :book: 目录（table of contents）
-- [x] :framed_picture: 动态为文章生成可供三方媒体预览的分享图像
-- [x] :framed_picture: Mediumzoom 图像灯箱
+## 快速开始
 
-### :package: 组件
+### 环境要求
 
-主题包含了许多组件，不仅可以在主题中使用，还可以在其他 Astro 项目中使用。
+- [Bun](https://bun.sh/) >= 1.0 （推荐）或 Node.js >= 18
+- Git
 
-> 其他 Astro 项目使用需要 UnoCSS。更多详情请查阅 [Package README](https://github.com/cworld1/astro-theme-pure/blob/main/packages/pure/README.md#use-with-common-astro-project)。
+### 本地开发
 
-- 基础组件：`Aside`、`Tabs`、`Timeline`、`Steps`、`Spoiler`...
-- 高级组件：`GithubCard`、`LinkPreview`、`Quote`、`QRCode`...
+```bash
+# 克隆仓库
+git clone https://github.com/JuyaoHuang/lingLong.git
+cd lingLong
 
-## :white_check_mark: Lighthouse 分数
-
-[![lighthouse-score](./.github/assets/lighthouse-score.png)](https://pagespeed.web.dev/analysis/https-cworld-top/o229zrt5o4?form_factor=mobile&hl=en)
-
-## 文档
-
-[文档](https://astro-pure.js.org/docs) | [展示台](https://github.com/cworld1/astro-theme-pure/issues/10)
-
-## NPM 包
-
-在 NPM 上查看：[astro-theme-pure](https://www.npmjs.com/package/astro-pure)
-
-## 本地开发
-
-环境要求：
-
-- [Nodejs](https://nodejs.org/): 18.0.0+
-
-克隆存储库：
-
-```shell
-git clone https://github.com/cworld1/astro-theme-pure.git
-cd astro-theme-pure
-```
-
-有用的命令：
-
-```shell
-# Install dependencies
+# 安装依赖
 bun install
-# Start the dev server
+
+# 启动开发服务器
 bun dev
-# Build the project
-bun run build
-# Preview (after the build)
-bun preview
-# Create a new post
-bun pure new
 ```
 
-## 贡献
+浏览器访问 `http://localhost:4321` 即可预览。
 
-为了花更多时间编写代码，减少在空白上纠结的时间，本项目使用代码约定和样式来鼓励一致性。风格一致的代码更容易（且更不容易出错）进行审查、维护和理解。
+### 构建与预览
 
-## 鸣谢
+```bash
+# 类型检查并构建
+bun build
 
-- [Astro Cactus](https://github.com/chrismwilliams/astro-theme-cactus)
-- [Astro Resume](https://github.com/srleom/astro-theme-resume)
-- [Starlight](https://github.com/withastro/starlight)
+# 本地预览构建产物
+bun preview
+```
 
-其他第三方参考资料在 [Docs#Contributions](https://astro-pure.js.org/docs/advanced/thanks) 上。感谢所有开源库。
+## 项目结构
+
+```
+.
+├── public/                 # 静态资源（favicon、图片等）
+├── src/
+│   ├── assets/             # 图片、样式、工具图标等
+│   ├── components/         # 自定义组件
+│   ├── content/
+│   │   ├── blog/           # 博客文章（按 分类/子分类 组织）
+│   │   └── docs/           # 文档内容
+│   ├── layouts/            # 页面布局
+│   ├── pages/              # 路由页面
+│   │   ├── blog/           # 博客列表与详情
+│   │   ├── categories/     # 分类页（支持两级）
+│   │   ├── tags/           # 标签页
+│   │   ├── archives/       # 归档页
+│   │   ├── projects/       # 项目展示
+│   │   ├── links/          # 友情链接
+│   │   ├── search/         # 全文搜索
+│   │   └── about/          # 关于页
+│   ├── plugins/            # 自定义 Shiki / rehype 插件
+│   ├── utils/              # 工具函数
+│   └── site.config.ts      # 站点配置文件
+├── packages/pure/          # astro-pure 本地工作区（开发用）
+├── astro.config.ts         # Astro 配置
+├── uno.config.ts           # UnoCSS 配置
+└── package.json
+```
+
+## 站点配置
+
+所有站点信息在 `src/site.config.ts` 中集中配置：
+
+```ts
+export const theme: ThemeUserConfig = {
+  title: 'Atri Website',
+  author: 'Juyao Huang',
+  description: '...',
+  // 导航菜单、页脚链接、社交账号等
+}
+
+export const integ: IntegrationUserConfig = {
+  // Waline 评论、Pagefind 搜索、引言、排版风格等
+}
+```
+
+详细配置项参考 [astro-pure 文档](https://astro-pure.js.org/docs/setup/configuration)。
+
+## 可用命令
+
+| 命令 | 说明 |
+|------|------|
+| `bun dev` | 启动本地开发服务器 |
+| `bun build` | 类型检查 + 构建生产产物 |
+| `bun preview` | 预览构建产物 |
+| `bun check` | 仅执行 TypeScript 类型检查 |
+| `bun format` | 格式化代码（Prettier） |
+| `bun lint` | 检查并修复代码风格（ESLint） |
+| `bun pure new` | 通过 CLI 向导新建博客文章 |
+| `bun cache:avatars` | 缓存友链头像到本地 `public/avatars/` |
+
+## 部署
+
+本项目使用 [Vercel](https://vercel.com/) 部署，在 `astro.config.ts` 中已配置 `@astrojs/vercel` 适配器。
+
+将仓库推送到 GitHub 后，在 Vercel 中导入项目即可自动部署。若需部署到其他平台，参考 [Astro 部署文档](https://docs.astro.build/en/guides/deploy/) 切换对应适配器。
+
+## 致谢
+
+本项目基于 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) 开发，感谢原作者 [cworld1](https://github.com/cworld1) 的出色工作。
 
 ## 许可证
 
-本项目基于 Apache 2.0 许可证。
-
-[![Star History Chart](https://api.star-history.com/svg?repos=cworld1/astro-theme-pure&type=Date)](https://star-history.com/#cworld1/astro-theme-pure&Date)
+本项目遵循 [Apache 2.0 License](./LICENSE)。
