@@ -17,6 +17,10 @@ A personal blog site built on [Astro Theme Pure](https://github.com/cworld1/astr
 - **Diagrams** — [Mermaid](https://mermaid.js.org/) with automatic dark/light theme switching
 - **Code highlighting** — Shiki with GitHub light/dark themes; enhanced with copy button, collapse (15+ lines), title, language badge, diff and highlight notations
 - **Image zoom** — Click-to-zoom powered by [medium-zoom](https://github.com/francoischalifour/medium-zoom)
+- **Word count** — Post list cards show word count instead of estimated reading time
+- **Weather widget** — Floating card on wide screens (>1400px); current conditions + 3-day forecast with [Chart.js](https://www.chartjs.org/) temperature/precipitation chart; auto-geolocation with [Nominatim](https://nominatim.org/) reverse geocoding; hourly detail panel; dark/light mode support
+- **Todo calendar** — Password-protected todo management page backed by [Neon](https://neon.tech/) PostgreSQL; GitHub-style 52-week contribution heatmap, monthly calendar with due-date markers, slide-in CRUD panel
+- **Avatar interaction** — Exponential spin animation on avatar hover
 - **Friend links** — Links page with an activity logbook
 - **Projects showcase** — Dedicated page for personal projects
 - **Share buttons** — One-click sharing to Weibo, X, and Bluesky
@@ -38,6 +42,8 @@ A personal blog site built on [Astro Theme Pure](https://github.com/cworld1/astr
 | Deployment | [Vercel](https://vercel.com/) |
 | Package Manager | [Bun](https://bun.sh/) |
 | Theme Package | [astro-pure](https://www.npmjs.com/package/astro-pure) |
+| Database | [Neon](https://neon.tech/) PostgreSQL (serverless, for todos) |
+| Charts | [Chart.js](https://www.chartjs.org/) (weather widget) |
 
 ## Getting Started
 
@@ -79,12 +85,18 @@ bun preview
 ├── public/                 # Static assets (favicon, images, etc.)
 ├── src/
 │   ├── assets/             # Images, styles, tool icons
-│   ├── components/         # Custom components
+│   ├── components/
+│   │   ├── todo/           # Todo calendar components (ContributionChart, MonthCalendar, TodoPanel, TodoItem)
+│   │   ├── weather/        # Weather widget component
+│   │   └── ...             # Other custom components
 │   ├── content/
 │   │   ├── blog/           # Blog posts (organized by category/subcategory)
 │   │   └── docs/           # Documentation content
 │   ├── layouts/            # Page layouts
+│   ├── lib/                # Database helpers (Neon connection)
+│   ├── middleware.ts        # Auth middleware (protects /todo and /api/todos)
 │   ├── pages/              # Route pages
+│   │   ├── api/            # REST API endpoints (auth + todo CRUD)
 │   │   ├── blog/           # Blog list and post pages
 │   │   ├── categories/     # Category pages (two-level hierarchy)
 │   │   ├── tags/           # Tag pages
@@ -92,7 +104,9 @@ bun preview
 │   │   ├── projects/       # Projects showcase
 │   │   ├── links/          # Friend links
 │   │   ├── search/         # Full-text search
-│   │   └── about/          # About page
+│   │   ├── todo/           # Todo calendar page (auth required)
+│   │   ├── about/          # About page
+│   │   └── login.astro     # Login page (for todo access)
 │   ├── plugins/            # Custom Shiki / rehype plugins
 │   ├── utils/              # Utility functions
 │   └── site.config.ts      # Site configuration

@@ -19,6 +19,10 @@
 - **流程图表** — 通过 [Mermaid](https://mermaid.js.org/) 渲染图表，支持明暗主题自动切换
 - **代码高亮** — Shiki 驱动，GitHub 明暗双主题，内置折叠、复制、标题、语言标记、diff 等增强
 - **图片放大** — [medium-zoom](https://github.com/francoischalifour/medium-zoom) 提供点击放大效果
+- **字数统计** — 文章列表卡片显示字数，替代估算阅读时间
+- **天气小部件** — 宽屏（>1400px）悬浮天气卡片；展示当前天气及未来 3 天预报，[Chart.js](https://www.chartjs.org/) 温度/降水量图表；自动定位并通过 [Nominatim](https://nominatim.org/) 逆地理编码显示真实城市名；逐时天气展开面板；支持明暗主题
+- **待办日历** — 密码保护的待办管理页，由 [Neon](https://neon.tech/) PostgreSQL 持久化；GitHub 风格 52 周贡献热力图、月历视图（蓝点标注到期日期）、滑出式 CRUD 面板
+- **头像互动** — 鼠标悬停头像时指数加速旋转动画
 - **友情链接** — 带动态日志的友链页面
 - **项目展示** — 个人项目展示页
 - **内容分享** — 支持微博、X、Bluesky 一键分享
@@ -40,6 +44,8 @@
 | 部署 | [Vercel](https://vercel.com/) |
 | 包管理 | [Bun](https://bun.sh/) |
 | 主题包 | [astro-pure](https://www.npmjs.com/package/astro-pure) |
+| 数据库 | [Neon](https://neon.tech/) PostgreSQL（无服务器，用于待办） |
+| 图表 | [Chart.js](https://www.chartjs.org/)（天气小部件） |
 
 ## 快速开始
 
@@ -81,12 +87,18 @@ bun preview
 ├── public/                 # 静态资源（favicon、图片等）
 ├── src/
 │   ├── assets/             # 图片、样式、工具图标等
-│   ├── components/         # 自定义组件
+│   ├── components/
+│   │   ├── todo/           # 待办日历组件（ContributionChart、MonthCalendar、TodoPanel、TodoItem）
+│   │   ├── weather/        # 天气小部件
+│   │   └── ...             # 其他自定义组件
 │   ├── content/
 │   │   ├── blog/           # 博客文章（按 分类/子分类 组织）
 │   │   └── docs/           # 文档内容
 │   ├── layouts/            # 页面布局
+│   ├── lib/                # 数据库连接辅助（Neon）
+│   ├── middleware.ts        # 认证中间件（保护 /todo 和 /api/todos 路由）
 │   ├── pages/              # 路由页面
+│   │   ├── api/            # REST API 接口（认证 + 待办 CRUD）
 │   │   ├── blog/           # 博客列表与详情
 │   │   ├── categories/     # 分类页（支持两级）
 │   │   ├── tags/           # 标签页
@@ -94,7 +106,9 @@ bun preview
 │   │   ├── projects/       # 项目展示
 │   │   ├── links/          # 友情链接
 │   │   ├── search/         # 全文搜索
-│   │   └── about/          # 关于页
+│   │   ├── todo/           # 待办日历页（需登录）
+│   │   ├── about/          # 关于页
+│   │   └── login.astro     # 登录页（访问待办页需要登录）
 │   ├── plugins/            # 自定义 Shiki / rehype 插件
 │   ├── utils/              # 工具函数
 │   └── site.config.ts      # 站点配置文件
