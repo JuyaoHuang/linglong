@@ -6,51 +6,25 @@ export const prerender = false
 export const PUT: APIRoute = async ({ params, request }) => {
   try {
     const sql = getDb()
-    const id = params.id
+    const id = Number(params.id)
     const body = await request.json()
 
-    const fields: string[] = []
-    const values: (string | boolean | null)[] = []
-    let idx = 1
-
-    if (body.title !== undefined) {
-      fields.push(`title = $${idx++}`)
-      values.push(body.title.trim())
-    }
-    if (body.content !== undefined) {
-      fields.push(`content = $${idx++}`)
-      values.push(body.content.trim())
-    }
-    if (body.completed !== undefined) {
-      fields.push(`completed = $${idx++}`)
-      values.push(body.completed)
-    }
-    if (body.due_date !== undefined) {
-      fields.push(`due_date = $${idx++}`)
-      values.push(body.due_date)
-    }
-
-    if (fields.length === 0) {
-      return new Response(JSON.stringify({ error: 'No fields to update' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      })
-    }
-
-    fields.push(`updated_at = NOW()`)
-    values.push(id!)
-
-    const rows = await sql(
-      `UPDATE todos SET ${fields.join(', ')} WHERE id = $${idx} RETURNING *`,
-      values
-    )
-
-    if (rows.length === 0) {
+    // First check if todo exists
+    const existing = await sql`SELECT * FROM todos WHERE id = ${id}`
+    if (existing.length === 0) {
       return new Response(JSON.stringify({ error: 'Todo not found' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
       })
     }
+
+    const current = existing[0]
+    const title = body.title !== undefined ? body.title.trim() : current.title
+    const content = body.content !== undefined ? body.content.trim() : current.content
+    const completed = body.completed !== undefined ? body.completed : current.completed
+    const dueDate = body.due_date !== undefined ? body.due_date : current.due_date
+
+    const rows = await sql`UPDATE todos SET title = ${title}, content = ${content}, completed = ${completed}, due_date = ${dueDate}, updated_at = NOW() WHERE id = ${id} RETURNING *`
 
     return new Response(JSON.stringify(rows[0]), {
       headers: { 'Content-Type': 'application/json' }
@@ -66,9 +40,8 @@ export const PUT: APIRoute = async ({ params, request }) => {
 export const DELETE: APIRoute = async ({ params }) => {
   try {
     const sql = getDb()
-    const rows = await sql('DELETE FROM todos WHERE id = $1 RETURNING id', [
-      params.id
-    ])
+    const id = Number(params.id)
+    const rows = await sql`DELETE FROM todos WHERE id = ${id} RETURNING id`
 
     if (rows.length === 0) {
       return new Response(JSON.stringify({ error: 'Todo not found' }), {

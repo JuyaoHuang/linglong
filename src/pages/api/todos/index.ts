@@ -9,25 +9,17 @@ export const GET: APIRoute = async ({ url }) => {
     const from = url.searchParams.get('from')
     const to = url.searchParams.get('to')
 
-    let query = 'SELECT * FROM todos'
-    const conditions: string[] = []
-    const params: string[] = []
-
-    if (from) {
-      conditions.push(`due_date >= $${conditions.length + 1}`)
-      params.push(from)
-    }
-    if (to) {
-      conditions.push(`due_date <= $${conditions.length + 1}`)
-      params.push(to)
+    let rows
+    if (from && to) {
+      rows = await sql`SELECT * FROM todos WHERE due_date >= ${from} AND due_date <= ${to} ORDER BY due_date ASC, created_at DESC`
+    } else if (from) {
+      rows = await sql`SELECT * FROM todos WHERE due_date >= ${from} ORDER BY due_date ASC, created_at DESC`
+    } else if (to) {
+      rows = await sql`SELECT * FROM todos WHERE due_date <= ${to} ORDER BY due_date ASC, created_at DESC`
+    } else {
+      rows = await sql`SELECT * FROM todos ORDER BY due_date ASC, created_at DESC`
     }
 
-    if (conditions.length > 0) {
-      query += ' WHERE ' + conditions.join(' AND ')
-    }
-    query += ' ORDER BY due_date ASC, created_at DESC'
-
-    const rows = await sql(query, params)
     return new Response(JSON.stringify(rows), {
       headers: { 'Content-Type': 'application/json' }
     })
@@ -51,12 +43,11 @@ export const POST: APIRoute = async ({ request }) => {
       })
     }
 
-    const rows = await sql(
-      `INSERT INTO todos (title, content, due_date)
-       VALUES ($1, $2, $3)
-       RETURNING *`,
-      [body.title.trim(), body.content?.trim() || '', body.due_date || null]
-    )
+    const title = body.title.trim()
+    const content = body.content?.trim() || ''
+    const dueDate = body.due_date || null
+
+    const rows = await sql`INSERT INTO todos (title, content, due_date) VALUES (${title}, ${content}, ${dueDate}) RETURNING *`
 
     return new Response(JSON.stringify(rows[0]), {
       status: 201,
