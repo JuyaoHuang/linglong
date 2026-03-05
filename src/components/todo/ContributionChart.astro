@@ -127,13 +127,15 @@
     const grid = document.getElementById('contribution-grid')
     if (!grid) return
 
-    // Fetch all todos for the past year
+    // Fetch todos for 6 months before and after today
     const now = new Date()
-    const yearAgo = new Date(now)
-    yearAgo.setFullYear(yearAgo.getFullYear() - 1)
+    const halfYearAgo = new Date(now)
+    halfYearAgo.setMonth(halfYearAgo.getMonth() - 6)
+    const halfYearLater = new Date(now)
+    halfYearLater.setMonth(halfYearLater.getMonth() + 6)
 
-    const from = localDateStr(yearAgo)
-    const to = localDateStr(now)
+    const from = localDateStr(halfYearAgo)
+    const to = localDateStr(halfYearLater)
 
     let todos: any[] = []
     try {
@@ -144,21 +146,25 @@
     // Calculate completion rate per day
     const dayMap = new Map<string, { total: number; completed: number }>()
     for (const todo of todos) {
-      const date = todo.due_date?.split('T')[0]
-      if (!date) continue
+      if (!todo.due_date) continue
+      const date = localDateStr(new Date(todo.due_date))
       const entry = dayMap.get(date) || { total: 0, completed: 0 }
       entry.total++
       if (todo.completed) entry.completed++
       dayMap.set(date, entry)
     }
 
-    // Build 52 weeks * 7 days grid
-    // Start from the Sunday of yearAgo's week
-    const startDate = new Date(yearAgo)
+    // Build grid: 6 months before today to 6 months after today
+    // Start from the Sunday of halfYearAgo's week
+    const startDate = new Date(halfYearAgo)
     startDate.setDate(startDate.getDate() - startDate.getDay())
 
+    const endDate = new Date(halfYearLater)
+    // End on the Saturday of halfYearLater's week
+    endDate.setDate(endDate.getDate() + (6 - endDate.getDay()))
+
     grid.innerHTML = ''
-    const totalDays = 52 * 7 + now.getDay() + 1
+    const totalDays = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
 
     // Generate month labels
     const monthLabelsEl = document.getElementById('month-labels')
