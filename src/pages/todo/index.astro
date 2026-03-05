@@ -1,0 +1,60 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import ContributionChart from '@/components/todo/ContributionChart.astro'
+import MonthCalendar from '@/components/todo/MonthCalendar.astro'
+import TodoPanel from '@/components/todo/TodoPanel.astro'
+
+export const prerender = false
+---
+
+<BaseLayout meta={{ title: 'Todo Calendar' }}>
+  <main class="todo-page">
+    <div class="todo-page-header">
+      <h1 class="text-2xl font-medium">Todo Calendar</h1>
+    </div>
+
+    <section class="chart-section">
+      <ContributionChart />
+    </section>
+
+    <section class="calendar-section">
+      <div class="calendar-wrapper">
+        <MonthCalendar />
+      </div>
+      <TodoPanel />
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .todo-page {
+    padding: 1.5rem 0;
+    animation: fade-in-up 0.4s ease-out;
+  }
+  .todo-page-header {
+    margin-bottom: 1.5rem;
+  }
+  .chart-section {
+    margin-bottom: 1.5rem;
+  }
+  .calendar-section {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .calendar-wrapper {
+    flex: 1;
+    min-width: 0;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

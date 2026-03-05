@@ -1,0 +1,241 @@
+---
+// TodoPanel.astro — Slide-in panel for todo CRUD on selected date
+import TodoItem from './TodoItem.astro'
+---
+
+<TodoItem />
+
+<div id="todo-panel" class="todo-panel">
+  <div class="panel-header">
+    <h3 id="panel-date" class="text-sm font-medium"></h3>
+    <button id="panel-close" class="panel-close" aria-label="Close panel">&times;</button>
+  </div>
+
+  <form id="todo-form" class="todo-form">
+    <input type="text" id="todo-title" placeholder="Todo title..." required
+      class="todo-input" />
+    <textarea id="todo-content" placeholder="Details (optional)"
+      rows="2" class="todo-input todo-textarea"></textarea>
+    <input type="hidden" id="todo-date" />
+    <input type="hidden" id="todo-edit-id" />
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Add Todo</button>
+      <button type="button" id="cancel-edit" class="btn-secondary hidden">Cancel</button>
+    </div>
+  </form>
+
+  <div id="todo-list" class="todo-list"></div>
+</div>
+
+<style>
+  .todo-panel {
+    position: relative;
+    width: 0;
+    overflow: hidden;
+    border-radius: var(--un-radius, 1rem);
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--background));
+    transition: width 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    flex-shrink: 0;
+  }
+  .todo-panel.open {
+    width: 360px;
+    padding: 1rem;
+    opacity: 1;
+  }
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .panel-close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: hsl(var(--muted-foreground));
+    padding: 0.25rem;
+    line-height: 1;
+  }
+  .panel-close:hover { color: hsl(var(--foreground)); }
+  .todo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+  .todo-input {
+    width: 100%;
+    padding: 0.5rem 0.625rem;
+    border-radius: 0.5rem;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-size: 0.8125rem;
+    transition: border-color 0.15s;
+  }
+  .todo-input:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+  }
+  .todo-textarea { resize: vertical; min-height: 2.5rem; }
+  .form-actions { display: flex; gap: 0.5rem; }
+  .btn-primary {
+    flex: 1;
+    padding: 0.4375rem 0.75rem;
+    border-radius: 0.5rem;
+    background: hsl(var(--primary));
+    color: hsl(var(--background));
+    border: none;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-secondary {
+    padding: 0.4375rem 0.75rem;
+    border-radius: 0.5rem;
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    border: none;
+    font-size: 0.8125rem;
+    cursor: pointer;
+  }
+  .hidden { display: none; }
+  .todo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+</style>
+
+<script>
+  let currentDate: string | null = null
+
+  function initPanel() {
+    const panel = document.getElementById('todo-panel')!
+    const panelDate = document.getElementById('panel-date')!
+    const closeBtn = document.getElementById('panel-close')!
+    const form = document.getElementById('todo-form') as HTMLFormElement
+    const titleInput = document.getElementById('todo-title') as HTMLInputElement
+    const contentInput = document.getElementById('todo-content') as HTMLTextAreaElement
+    const dateInput = document.getElementById('todo-date') as HTMLInputElement
+    const editIdInput = document.getElementById('todo-edit-id') as HTMLInputElement
+    const cancelBtn = document.getElementById('cancel-edit')!
+    const submitBtn = form.querySelector('button[type="submit"]')!
+    const todoList = document.getElementById('todo-list')!
+
+    closeBtn.addEventListener('click', () => {
+      panel.classList.remove('open')
+      currentDate = null
+    })
+
+    cancelBtn.addEventListener('click', () => {
+      editIdInput.value = ''
+      titleInput.value = ''
+      contentInput.value = ''
+      submitBtn.textContent = 'Add Todo'
+      cancelBtn.classList.add('hidden')
+    })
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const title = titleInput.value.trim()
+      if (!title) return
+
+      const editId = editIdInput.value
+      const payload: any = {
+        title,
+        content: contentInput.value.trim(),
+        due_date: dateInput.value || currentDate
+      }
+
+      try {
+        if (editId) {
+          await fetch(`/api/todos/${editId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          })
+        } else {
+          await fetch('/api/todos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          })
+        }
+        titleInput.value = ''
+        contentInput.value = ''
+        editIdInput.value = ''
+        submitBtn.textContent = 'Add Todo'
+        cancelBtn.classList.add('hidden')
+        loadTodos(currentDate!)
+        window.dispatchEvent(new Event('todos:updated'))
+      } catch {}
+    })
+
+    window.addEventListener('calendar:select', ((e: CustomEvent) => {
+      currentDate = e.detail.date
+      dateInput.value = currentDate!
+      panelDate.textContent = currentDate
+      panel.classList.add('open')
+      loadTodos(currentDate!)
+    }) as EventListener)
+
+    async function loadTodos(date: string) {
+      todoList.innerHTML = ''
+      try {
+        const res = await fetch(`/api/todos?from=${date}&to=${date}`)
+        if (!res.ok) return
+        const todos: any[] = await res.json()
+        const tpl = document.getElementById('todo-item-template') as HTMLTemplateElement
+        for (const todo of todos) {
+          const clone = tpl.content.cloneNode(true) as DocumentFragment
+          const item = clone.querySelector('.todo-item') as HTMLElement
+          item.dataset.id = todo.id
+          if (todo.completed) item.classList.add('completed')
+          item.querySelector('.todo-title')!.textContent = todo.title
+          const desc = item.querySelector('.todo-desc')!
+          if (todo.content) { desc.textContent = todo.content } else { (desc as HTMLElement).style.display = 'none' }
+
+          item.querySelector('.toggle-btn')!.addEventListener('click', async () => {
+            await fetch(`/api/todos/${todo.id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ completed: !todo.completed })
+            })
+            loadTodos(date)
+            window.dispatchEvent(new Event('todos:updated'))
+          })
+
+          item.querySelector('.edit-btn')!.addEventListener('click', () => {
+            editIdInput.value = todo.id
+            titleInput.value = todo.title
+            contentInput.value = todo.content || ''
+            submitBtn.textContent = 'Update'
+            cancelBtn.classList.remove('hidden')
+            titleInput.focus()
+          })
+
+          item.querySelector('.delete-btn')!.addEventListener('click', async () => {
+            await fetch(`/api/todos/${todo.id}`, { method: 'DELETE' })
+            loadTodos(date)
+            window.dispatchEvent(new Event('todos:updated'))
+          })
+
+          todoList.appendChild(clone)
+        }
+      } catch {}
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initPanel)
+  document.addEventListener('astro:page-load', initPanel)
+</script>

@@ -1,0 +1,134 @@
+---
+// ContributionChart.astro — GitHub-style 52-week heatmap
+// Auto-calculated from todo completion rate per day
+---
+
+<div class="contribution-chart">
+  <div class="chart-header">
+    <h3 class="text-sm font-medium text-muted-foreground">Contribution Activity</h3>
+    <div class="legend">
+      <span class="text-xs text-muted-foreground">Less</span>
+      <span class="cell" data-level="0"></span>
+      <span class="cell" data-level="1"></span>
+      <span class="cell" data-level="2"></span>
+      <span class="cell" data-level="3"></span>
+      <span class="cell" data-level="4"></span>
+      <span class="text-xs text-muted-foreground">More</span>
+    </div>
+  </div>
+  <div class="chart-grid" id="contribution-grid"></div>
+</div>
+
+<style>
+  .contribution-chart {
+    width: 100%;
+    padding: 1rem;
+    border-radius: var(--un-radius, 1rem);
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--background));
+  }
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .chart-grid {
+    display: grid;
+    grid-template-rows: repeat(7, 1fr);
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 3px;
+    overflow-x: auto;
+  }
+  .cell {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: hsl(var(--muted));
+  }
+  .cell[data-level="1"] { background: hsl(142 43% 72%); }
+  .cell[data-level="2"] { background: hsl(142 47% 51%); }
+  .cell[data-level="3"] { background: hsl(142 55% 37%); }
+  .cell[data-level="4"] { background: hsl(142 61% 25%); }
+  .cell:hover {
+    outline: 1px solid hsl(var(--foreground) / 0.3);
+    cursor: pointer;
+  }
+  .cell .tooltip {
+    display: none;
+  }
+</style>
+
+<script>
+  async function initContributionChart() {
+    const grid = document.getElementById('contribution-grid')
+    if (!grid) return
+
+    // Fetch all todos for the past year
+    const now = new Date()
+    const yearAgo = new Date(now)
+    yearAgo.setFullYear(yearAgo.getFullYear() - 1)
+
+    const from = yearAgo.toISOString().split('T')[0]
+    const to = now.toISOString().split('T')[0]
+
+    let todos: any[] = []
+    try {
+      const res = await fetch(`/api/todos?from=${from}&to=${to}`)
+      if (res.ok) todos = await res.json()
+    } catch {}
+
+    // Calculate completion rate per day
+    const dayMap = new Map<string, { total: number; completed: number }>()
+    for (const todo of todos) {
+      const date = todo.due_date?.split('T')[0]
+      if (!date) continue
+      const entry = dayMap.get(date) || { total: 0, completed: 0 }
+      entry.total++
+      if (todo.completed) entry.completed++
+      dayMap.set(date, entry)
+    }
+
+    // Build 52 weeks * 7 days grid
+    // Start from the Sunday of yearAgo's week
+    const startDate = new Date(yearAgo)
+    startDate.setDate(startDate.getDate() - startDate.getDay())
+
+    grid.innerHTML = ''
+    const totalDays = 52 * 7 + now.getDay() + 1
+
+    for (let i = 0; i < totalDays; i++) {
+      const date = new Date(startDate)
+      date.setDate(date.getDate() + i)
+      const dateStr = date.toISOString().split('T')[0]
+      const entry = dayMap.get(dateStr)
+
+      let level = 0
+      if (entry && entry.total > 0) {
+        const rate = entry.completed / entry.total
+        if (rate > 0) level = 1
+        if (rate >= 0.25) level = 2
+        if (rate >= 0.5) level = 3
+        if (rate >= 0.75) level = 4
+      }
+
+      const cell = document.createElement('span')
+      cell.className = 'cell'
+      cell.dataset.level = String(level)
+      cell.dataset.date = dateStr
+      cell.title = entry
+        ? `${dateStr}: ${entry.completed}/${entry.total} completed`
+        : `${dateStr}: no todos`
+      grid.appendChild(cell)
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initContributionChart)
+  document.addEventListener('astro:page-load', initContributionChart)
+</script>
