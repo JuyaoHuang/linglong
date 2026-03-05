@@ -10,6 +10,7 @@ import ProjectCard from '@/components/home/ProjectCard.astro'
 import Section from '@/components/home/Section.astro'
 import SkillLayout from '@/components/home/SkillLayout.astro'
 import config from '@/site-config'
+import WeatherWidget from '@/components/weather/WeatherWidget.astro'
 import BuptImg from '@/assets/education/BUPT.svg'
 import NnsImg from '@/assets/education/nnsz.png'
 
@@ -33,6 +34,7 @@ if (!images[imagePath])
 ---
 
 <PageLayout meta={{ title: 'Home' }} highlightColor='#659EB9'>
+  <WeatherWidget />
   <main class='flex w-full flex-col items-center'>
     <section class='animate mb-10 flex flex-col items-center gap-y-7' id='content-header'>
       <Image

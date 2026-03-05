@@ -1,0 +1,305 @@
+---
+// WeatherWidget.astro — Floating weather card in left viewport margin
+// Only visible on PC screens >1400px
+// Uses Open-Meteo API (free, no key required)
+---
+
+<div id="weather-widget" class="weather-widget">
+  <div class="weather-header">
+    <span id="weather-city" class="text-sm font-medium">Loading...</span>
+    <button id="weather-refresh" class="refresh-btn" aria-label="Refresh weather">↻</button>
+  </div>
+
+  <div id="weather-current" class="weather-current">
+    <div class="current-temp">
+      <span id="weather-temp" class="text-3xl font-light">--</span>
+      <span class="text-sm text-muted-foreground">°C</span>
+    </div>
+    <div class="current-details text-xs text-muted-foreground">
+      <span id="weather-desc"></span>
+      <span id="weather-humidity"></span>
+      <span id="weather-wind"></span>
+    </div>
+  </div>
+
+  <canvas id="weather-chart" width="260" height="120"></canvas>
+
+  <div class="weather-footer">
+    <input type="text" id="weather-city-input" placeholder="City name..."
+      class="city-input" />
+  </div>
+</div>
+
+<style>
+  .weather-widget {
+    position: fixed;
+    left: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 280px;
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--background) / 0.8);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 24px hsl(var(--foreground) / 0.06);
+    z-index: 40;
+    display: none;
+    animation: fade-in-up 0.4s ease-out;
+  }
+  @media (min-width: 1400px) {
+    .weather-widget { display: block; }
+  }
+  .weather-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .refresh-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: hsl(var(--muted-foreground));
+    padding: 0.125rem;
+    transition: color 0.15s;
+  }
+  .refresh-btn:hover { color: hsl(var(--foreground)); }
+  .weather-current {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+  .current-temp {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.125rem;
+  }
+  .current-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.125rem;
+  }
+  #weather-chart {
+    width: 100%;
+    height: 120px;
+    margin-bottom: 0.5rem;
+  }
+  .weather-footer {
+    border-top: 1px solid hsl(var(--border));
+    padding-top: 0.5rem;
+  }
+  .city-input {
+    width: 100%;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid hsl(var(--border));
+    background: transparent;
+    color: hsl(var(--foreground));
+    font-size: 0.75rem;
+  }
+  .city-input:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+  }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(-50%) translateY(10px); }
+    to { opacity: 1; transform: translateY(-50%) translateY(0); }
+  }
+</style>
+
+<script>
+  import { Chart, LineController, BarController, LineElement, BarElement, PointElement, CategoryScale, LinearScale, Tooltip, Filler } from 'chart.js'
+
+  Chart.register(LineController, BarController, LineElement, BarElement, PointElement, CategoryScale, LinearScale, Tooltip, Filler)
+
+  const WMO_CODES: Record<number, string> = {
+    0: 'Clear', 1: 'Mostly Clear', 2: 'Partly Cloudy', 3: 'Overcast',
+    45: 'Fog', 48: 'Rime Fog', 51: 'Light Drizzle', 53: 'Drizzle',
+    55: 'Heavy Drizzle', 61: 'Light Rain', 63: 'Rain', 65: 'Heavy Rain',
+    71: 'Light Snow', 73: 'Snow', 75: 'Heavy Snow', 80: 'Light Showers',
+    81: 'Showers', 82: 'Heavy Showers', 95: 'Thunderstorm'
+  }
+
+  let chartInstance: Chart | null = null
+
+  async function geocodeCity(city: string) {
+    const res = await fetch(
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`
+    )
+    const data = await res.json()
+    if (!data.results?.length) return null
+    const r = data.results[0]
+    return { lat: r.latitude, lon: r.longitude, name: r.name }
+  }
+
+  async function fetchWeather(lat: number, lon: number) {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto&forecast_days=4`
+    const res = await fetch(url)
+    return res.json()
+  }
+
+  function renderChart(daily: any) {
+    const canvas = document.getElementById('weather-chart') as HTMLCanvasElement
+    if (!canvas) return
+
+    if (chartInstance) chartInstance.destroy()
+
+    const labels = daily.time.map((d: string) => {
+      const date = new Date(d)
+      return date.toLocaleDateString('en', { weekday: 'short' })
+    })
+
+    const isDark = document.documentElement.classList.contains('dark')
+    const textColor = isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)'
+
+    chartInstance = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          {
+            type: 'line',
+            label: 'High',
+            data: daily.temperature_2m_max,
+            borderColor: 'hsl(0, 70%, 60%)',
+            backgroundColor: 'hsla(0, 70%, 60%, 0.1)',
+            borderWidth: 2,
+            pointRadius: 3,
+            tension: 0.3,
+            fill: false,
+            yAxisID: 'y'
+          },
+          {
+            type: 'line',
+            label: 'Low',
+            data: daily.temperature_2m_min,
+            borderColor: 'hsl(210, 70%, 60%)',
+            backgroundColor: 'hsla(210, 70%, 60%, 0.1)',
+            borderWidth: 2,
+            pointRadius: 3,
+            tension: 0.3,
+            fill: false,
+            yAxisID: 'y'
+          },
+          {
+            type: 'bar',
+            label: 'Precip',
+            data: daily.precipitation_sum,
+            backgroundColor: 'hsla(210, 80%, 55%, 0.3)',
+            borderRadius: 2,
+            yAxisID: 'y1'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          tooltip: { enabled: true },
+        },
+        scales: {
+          x: {
+            ticks: { color: textColor, font: { size: 10 } },
+            grid: { display: false }
+          },
+          y: {
+            position: 'left',
+            ticks: {
+              color: textColor,
+              font: { size: 10 },
+              callback: (v: any) => v + '°'
+            },
+            grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }
+          },
+          y1: {
+            position: 'right',
+            ticks: {
+              color: textColor,
+              font: { size: 10 },
+              callback: (v: any) => v + 'mm'
+            },
+            grid: { display: false },
+            min: 0
+          }
+        }
+      }
+    })
+  }
+
+  function updateUI(data: any, cityName: string) {
+    const cityEl = document.getElementById('weather-city')
+    const tempEl = document.getElementById('weather-temp')
+    const descEl = document.getElementById('weather-desc')
+    const humidEl = document.getElementById('weather-humidity')
+    const windEl = document.getElementById('weather-wind')
+
+    if (cityEl) cityEl.textContent = cityName
+    if (tempEl) tempEl.textContent = String(Math.round(data.current.temperature_2m))
+    if (descEl) descEl.textContent = WMO_CODES[data.current.weather_code] || 'Unknown'
+    if (humidEl) humidEl.textContent = `Humidity: ${data.current.relative_humidity_2m}%`
+    if (windEl) windEl.textContent = `Wind: ${data.current.wind_speed_10m} km/h`
+
+    renderChart(data.daily)
+  }
+
+  async function loadWeather(lat?: number, lon?: number, city?: string) {
+    try {
+      let name = city || 'My Location'
+      if (!lat || !lon) {
+        // Try geolocation
+        const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
+        })
+        lat = pos.coords.latitude
+        lon = pos.coords.longitude
+      }
+      const data = await fetchWeather(lat, lon)
+      updateUI(data, name)
+    } catch {
+      const cityEl = document.getElementById('weather-city')
+      if (cityEl) cityEl.textContent = 'Enter a city below'
+    }
+  }
+
+  function initWeather() {
+    const saved = localStorage.getItem('weather-city')
+    if (saved) {
+      const { lat, lon, name } = JSON.parse(saved)
+      loadWeather(lat, lon, name)
+    } else {
+      loadWeather()
+    }
+
+    document.getElementById('weather-refresh')?.addEventListener('click', () => {
+      const saved = localStorage.getItem('weather-city')
+      if (saved) {
+        const { lat, lon, name } = JSON.parse(saved)
+        loadWeather(lat, lon, name)
+      } else {
+        loadWeather()
+      }
+    })
+
+    const input = document.getElementById('weather-city-input') as HTMLInputElement
+    input?.addEventListener('keydown', async (e) => {
+      if (e.key !== 'Enter') return
+      const city = input.value.trim()
+      if (!city) return
+      const geo = await geocodeCity(city)
+      if (geo) {
+        localStorage.setItem('weather-city', JSON.stringify(geo))
+        loadWeather(geo.lat, geo.lon, geo.name)
+        input.value = ''
+      }
+    })
+  }
+
+  document.addEventListener('DOMContentLoaded', initWeather)
+  document.addEventListener('astro:page-load', initWeather)
+</script>
