@@ -18,4 +18,3 @@ export function getDb() {
 //   created_at TIMESTAMPTZ DEFAULT NOW(),
 //   updated_at TIMESTAMPTZ DEFAULT NOW()
 // );
-  

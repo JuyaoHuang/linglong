@@ -12,7 +12,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
     // First check if todo exists
     const existing = await sql`SELECT * FROM todos WHERE id = ${id}`
     if (existing.length === 0) {
-      return new Response(JSON.stringify({ error: 'Todo not found' }), {
+      return new Response(JSON.stringify({ error: '待办不存在' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
       })
@@ -30,7 +30,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
       headers: { 'Content-Type': 'application/json' }
     })
   } catch (err) {
-    return new Response(JSON.stringify({ error: 'Failed to update todo' }), {
+    return new Response(JSON.stringify({ error: '更新待办失败' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     })
@@ -44,7 +44,7 @@ export const DELETE: APIRoute = async ({ params }) => {
     const rows = await sql`DELETE FROM todos WHERE id = ${id} RETURNING id`
 
     if (rows.length === 0) {
-      return new Response(JSON.stringify({ error: 'Todo not found' }), {
+      return new Response(JSON.stringify({ error: '待办不存在' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
       })
@@ -54,7 +54,7 @@ export const DELETE: APIRoute = async ({ params }) => {
       headers: { 'Content-Type': 'application/json' }
     })
   } catch (err) {
-    return new Response(JSON.stringify({ error: 'Failed to delete todo' }), {
+    return new Response(JSON.stringify({ error: '删除待办失败' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     })

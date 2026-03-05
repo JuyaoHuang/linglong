@@ -17,7 +17,7 @@ function generateToken(password: string): string {
 export const POST: APIRoute = async ({ request }) => {
   const body = await request.json().catch(() => null)
   if (!body?.password) {
-    return new Response(JSON.stringify({ error: 'Password required' }), {
+    return new Response(JSON.stringify({ error: '请输入密码' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
     })
@@ -25,14 +25,14 @@ export const POST: APIRoute = async ({ request }) => {
 
   const adminPassword = import.meta.env.ADMIN_PASSWORD
   if (!adminPassword) {
-    return new Response(JSON.stringify({ error: 'Server not configured' }), {
+    return new Response(JSON.stringify({ error: '服务器未配置' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     })
   }
 
   if (body.password !== adminPassword) {
-    return new Response(JSON.stringify({ error: 'Invalid password' }), {
+    return new Response(JSON.stringify({ error: '密码错误' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     })

@@ -8,19 +8,19 @@ import TodoItem from './TodoItem.astro'
 <div id="todo-panel" class="todo-panel">
   <div class="panel-header">
     <h3 id="panel-date" class="text-sm font-medium"></h3>
-    <button id="panel-close" class="panel-close" aria-label="Close panel">&times;</button>
+    <button id="panel-close" class="panel-close" aria-label="关闭面板">&times;</button>
   </div>
 
   <form id="todo-form" class="todo-form">
-    <input type="text" id="todo-title" placeholder="Todo title..." required
+    <input type="text" id="todo-title" placeholder="待办标题..." required
       class="todo-input" />
-    <textarea id="todo-content" placeholder="Details (optional)"
+    <textarea id="todo-content" placeholder="详情（可选）"
       rows="2" class="todo-input todo-textarea"></textarea>
     <input type="hidden" id="todo-date" />
     <input type="hidden" id="todo-edit-id" />
     <div class="form-actions">
-      <button type="submit" class="btn-primary">Add Todo</button>
-      <button type="button" id="cancel-edit" class="btn-secondary hidden">Cancel</button>
+      <button type="submit" class="btn-primary">添加待办</button>
+      <button type="button" id="cancel-edit" class="btn-secondary hidden">取消</button>
     </div>
   </form>
 
@@ -141,7 +141,7 @@ import TodoItem from './TodoItem.astro'
       editIdInput.value = ''
       titleInput.value = ''
       contentInput.value = ''
-      submitBtn.textContent = 'Add Todo'
+      submitBtn.textContent = '添加待办'
       cancelBtn.classList.add('hidden')
     })
 
@@ -174,7 +174,7 @@ import TodoItem from './TodoItem.astro'
         titleInput.value = ''
         contentInput.value = ''
         editIdInput.value = ''
-        submitBtn.textContent = 'Add Todo'
+        submitBtn.textContent = '添加待办'
         cancelBtn.classList.add('hidden')
         loadTodos(currentDate!)
         window.dispatchEvent(new Event('todos:updated'))
@@ -219,7 +219,7 @@ import TodoItem from './TodoItem.astro'
             editIdInput.value = todo.id
             titleInput.value = todo.title
             contentInput.value = todo.content || ''
-            submitBtn.textContent = 'Update'
+            submitBtn.textContent = '更新'
             cancelBtn.classList.remove('hidden')
             titleInput.focus()
           })

@@ -5,7 +5,7 @@
 <template id="todo-item-template">
   <div class="todo-item" data-id="">
     <div class="todo-main">
-      <button class="toggle-btn" aria-label="Toggle completion">
+      <button class="toggle-btn" aria-label="切换完成状态">
         <span class="check-icon"></span>
       </button>
       <div class="todo-content">
@@ -13,18 +13,18 @@
         <span class="todo-desc text-xs text-muted-foreground"></span>
       </div>
       <div class="todo-actions">
-        <button class="edit-btn text-xs text-muted-foreground hover:text-foreground" aria-label="Edit">
-          Edit
+        <button class="edit-btn text-xs text-muted-foreground hover:text-foreground" aria-label="编辑">
+          编辑
         </button>
-        <button class="delete-btn text-xs text-red-400 hover:text-red-600" aria-label="Delete">
-          Delete
+        <button class="delete-btn text-xs text-red-400 hover:text-red-600" aria-label="删除">
+          删除
         </button>
       </div>
     </div>
   </div>
 </template>
 
-<style>
+<style is:global>
   .todo-item {
     padding: 0.625rem 0.75rem;
     border-radius: 0.5rem;

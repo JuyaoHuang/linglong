@@ -24,7 +24,7 @@ export const GET: APIRoute = async ({ url }) => {
       headers: { 'Content-Type': 'application/json' }
     })
   } catch (err) {
-    return new Response(JSON.stringify({ error: 'Failed to fetch todos' }), {
+    return new Response(JSON.stringify({ error: '获取待办失败' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     })
@@ -37,7 +37,7 @@ export const POST: APIRoute = async ({ request }) => {
     const body = await request.json()
 
     if (!body.title?.trim()) {
-      return new Response(JSON.stringify({ error: 'Title is required' }), {
+      return new Response(JSON.stringify({ error: '标题不能为空' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       })
@@ -54,7 +54,7 @@ export const POST: APIRoute = async ({ request }) => {
       headers: { 'Content-Type': 'application/json' }
     })
   } catch (err) {
-    return new Response(JSON.stringify({ error: 'Failed to create todo' }), {
+    return new Response(JSON.stringify({ error: '创建待办失败' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     })

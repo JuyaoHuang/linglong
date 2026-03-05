@@ -5,18 +5,32 @@
 
 <div class="contribution-chart">
   <div class="chart-header">
-    <h3 class="text-sm font-medium text-muted-foreground">Contribution Activity</h3>
+    <h3 class="text-sm font-medium text-muted-foreground">贡献活动</h3>
     <div class="legend">
-      <span class="text-xs text-muted-foreground">Less</span>
+      <span class="text-xs text-muted-foreground">少</span>
       <span class="cell" data-level="0"></span>
       <span class="cell" data-level="1"></span>
       <span class="cell" data-level="2"></span>
       <span class="cell" data-level="3"></span>
       <span class="cell" data-level="4"></span>
-      <span class="text-xs text-muted-foreground">More</span>
+      <span class="text-xs text-muted-foreground">多</span>
     </div>
   </div>
-  <div class="chart-grid" id="contribution-grid"></div>
+  <div class="chart-body">
+    <div class="day-labels">
+      <span></span>
+      <span>Mon</span>
+      <span></span>
+      <span>Wed</span>
+      <span></span>
+      <span>Fri</span>
+      <span></span>
+    </div>
+    <div class="grid-wrapper">
+      <div class="month-labels" id="month-labels"></div>
+      <div class="chart-grid" id="contribution-grid"></div>
+    </div>
+  </div>
 </div>
 
 <style>
@@ -38,34 +52,77 @@
     align-items: center;
     gap: 3px;
   }
-  .chart-grid {
-    display: grid;
-    grid-template-rows: repeat(7, 1fr);
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    gap: 3px;
-    overflow-x: auto;
-  }
-  .cell {
+  .legend .cell {
     width: 12px;
     height: 12px;
     border-radius: 2px;
     background: hsl(var(--muted));
   }
-  .cell[data-level="1"] { background: hsl(142 43% 72%); }
-  .cell[data-level="2"] { background: hsl(142 47% 51%); }
-  .cell[data-level="3"] { background: hsl(142 55% 37%); }
-  .cell[data-level="4"] { background: hsl(142 61% 25%); }
-  .cell:hover {
+  .legend .cell[data-level="1"] { background: hsl(142 43% 72%); }
+  .legend .cell[data-level="2"] { background: hsl(142 47% 51%); }
+  .legend .cell[data-level="3"] { background: hsl(142 55% 37%); }
+  .legend .cell[data-level="4"] { background: hsl(142 61% 25%); }
+  .chart-body {
+    display: flex;
+    gap: 4px;
+  }
+  .day-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-top: 18px;
+  }
+  .day-labels span {
+    height: 12px;
+    font-size: 0.625rem;
+    line-height: 12px;
+    color: hsl(var(--muted-foreground));
+    text-align: right;
+    min-width: 24px;
+  }
+  .grid-wrapper {
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+  }
+  .month-labels {
+    display: flex;
+    height: 18px;
+    align-items: center;
+  }
+  .grid-wrapper :global(.month-label) {
+    font-size: 0.625rem;
+    color: hsl(var(--muted-foreground));
+  }
+  .chart-grid {
+    display: grid;
+    grid-template-rows: repeat(7, 12px);
+    grid-auto-flow: column;
+    grid-auto-columns: 12px;
+    gap: 3px;
+    overflow-x: auto;
+  }
+  .chart-grid :global(.cell) {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: hsl(var(--muted));
+  }
+  .chart-grid :global(.cell[data-level="1"]) { background: hsl(142 43% 72%); }
+  .chart-grid :global(.cell[data-level="2"]) { background: hsl(142 47% 51%); }
+  .chart-grid :global(.cell[data-level="3"]) { background: hsl(142 55% 37%); }
+  .chart-grid :global(.cell[data-level="4"]) { background: hsl(142 61% 25%); }
+  .chart-grid :global(.cell:hover) {
     outline: 1px solid hsl(var(--foreground) / 0.3);
     cursor: pointer;
-  }
-  .cell .tooltip {
-    display: none;
   }
 </style>
 
 <script>
+  function localDateStr(d: Date): string {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  }
+
   async function initContributionChart() {
     const grid = document.getElementById('contribution-grid')
     if (!grid) return
@@ -75,8 +132,8 @@
     const yearAgo = new Date(now)
     yearAgo.setFullYear(yearAgo.getFullYear() - 1)
 
-    const from = yearAgo.toISOString().split('T')[0]
-    const to = now.toISOString().split('T')[0]
+    const from = localDateStr(yearAgo)
+    const to = localDateStr(now)
 
     let todos: any[] = []
     try {
@@ -103,10 +160,42 @@
     grid.innerHTML = ''
     const totalDays = 52 * 7 + now.getDay() + 1
 
+    // Generate month labels
+    const monthLabelsEl = document.getElementById('month-labels')
+    if (monthLabelsEl) {
+      monthLabelsEl.innerHTML = ''
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+      let lastMonth = -1
+      let weekCount = 0
+      const totalWeeks = Math.ceil(totalDays / 7)
+      const weekMonths: { month: number; startWeek: number }[] = []
+
+      for (let w = 0; w < totalWeeks; w++) {
+        const d = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + w * 7)
+        const m = d.getMonth()
+        if (m !== lastMonth) {
+          weekMonths.push({ month: m, startWeek: w })
+          lastMonth = m
+        }
+      }
+
+      // Each cell is 12px + 3px gap = 15px per column
+      for (let i = 0; i < weekMonths.length; i++) {
+        const label = document.createElement('span')
+        label.className = 'month-label'
+        label.textContent = months[weekMonths[i].month]
+        const leftPx = weekMonths[i].startWeek * 15
+        label.style.position = 'absolute'
+        label.style.left = leftPx + 'px'
+        monthLabelsEl.appendChild(label)
+      }
+      monthLabelsEl.style.position = 'relative'
+    }
+
     for (let i = 0; i < totalDays; i++) {
       const date = new Date(startDate)
       date.setDate(date.getDate() + i)
-      const dateStr = date.toISOString().split('T')[0]
+      const dateStr = localDateStr(date)
       const entry = dayMap.get(dateStr)
 
       let level = 0
@@ -123,12 +212,13 @@
       cell.dataset.level = String(level)
       cell.dataset.date = dateStr
       cell.title = entry
-        ? `${dateStr}: ${entry.completed}/${entry.total} completed`
-        : `${dateStr}: no todos`
+        ? `${dateStr}: ${entry.completed}/${entry.total} 已完成`
+        : `${dateStr}: 无待办`
       grid.appendChild(cell)
     }
   }
 
   document.addEventListener('DOMContentLoaded', initContributionChart)
   document.addEventListener('astro:page-load', initContributionChart)
+  window.addEventListener('todos:updated', initContributionChart)
 </script>

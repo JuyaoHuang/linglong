@@ -4,15 +4,15 @@ import BaseLayout from '@/layouts/BaseLayout.astro'
 export const prerender = false
 ---
 
-<BaseLayout meta={{ title: 'Login' }}>
+<BaseLayout meta={{ title: '登录' }}>
   <main class="flex-1 flex items-center justify-center py-20">
     <div class="w-full max-w-sm mx-auto">
       <div class="rounded-2xl border border-border bg-background p-8 shadow-sm">
-        <h1 class="text-2xl font-medium mb-6 text-center">Login</h1>
+        <h1 class="text-2xl font-medium mb-6 text-center">登录</h1>
         <form id="login-form" class="space-y-4">
           <div>
             <label for="password" class="block text-sm font-medium text-muted-foreground mb-1.5">
-              Password
+              密码
             </label>
             <input
               type="password"
@@ -21,7 +21,7 @@ export const prerender = false
               required
               autocomplete="current-password"
               class="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              placeholder="Enter password"
+              placeholder="请输入密码"
             />
           </div>
           <p id="error-msg" class="text-sm text-red-500 hidden"></p>
@@ -29,7 +29,7 @@ export const prerender = false
             type="submit"
             class="w-full rounded-lg bg-primary px-4 py-2 text-sm font-medium text-background transition hover:opacity-90 disabled:opacity-50"
           >
-            Sign In
+            登录
           </button>
         </form>
       </div>
@@ -51,7 +51,7 @@ export const prerender = false
 
     const btn = form.querySelector('button') as HTMLButtonElement
     btn.disabled = true
-    btn.textContent = 'Signing in...'
+    btn.textContent = '登录中...'
 
     try {
       const res = await fetch('/api/auth/login', {
@@ -64,15 +64,15 @@ export const prerender = false
         window.location.href = '/todo'
       } else {
         const data = await res.json()
-        errorMsg.textContent = data.error || 'Login failed'
+        errorMsg.textContent = data.error || '登录失败'
         errorMsg.classList.remove('hidden')
       }
     } catch {
-      errorMsg.textContent = 'Network error'
+      errorMsg.textContent = '网络错误'
       errorMsg.classList.remove('hidden')
     } finally {
       btn.disabled = false
-      btn.textContent = 'Sign In'
+      btn.textContent = '登录'
     }
   })
 </script>

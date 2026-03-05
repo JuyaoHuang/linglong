@@ -9,8 +9,8 @@
     <button id="cal-next" class="cal-nav" aria-label="Next month">&gt;</button>
   </div>
   <div class="cal-weekdays">
-    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
-    <span>Thu</span><span>Fri</span><span>Sat</span>
+    <span>日</span><span>一</span><span>二</span><span>三</span>
+    <span>四</span><span>五</span><span>六</span>
   </div>
   <div id="cal-days" class="cal-days"></div>
 </div>
@@ -54,7 +54,7 @@
     grid-template-columns: repeat(7, 1fr);
     gap: 2px;
   }
-  .cal-day {
+  #cal-days :global(.cal-day) {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -67,22 +67,22 @@
     transition: background 0.15s;
     min-height: 2.25rem;
   }
-  .cal-day:hover {
+  #cal-days :global(.cal-day:hover) {
     background: hsl(var(--muted));
   }
-  .cal-day.today {
+  #cal-days :global(.cal-day.today) {
     font-weight: 600;
     color: hsl(var(--primary));
   }
-  .cal-day.selected {
+  #cal-days :global(.cal-day.selected) {
     background: hsl(var(--primary) / 0.15);
     color: hsl(var(--primary));
     font-weight: 600;
   }
-  .cal-day.other-month {
+  #cal-days :global(.cal-day.other-month) {
     opacity: 0.3;
   }
-  .cal-dot {
+  #cal-days :global(.cal-dot) {
     width: 4px;
     height: 4px;
     border-radius: 50%;
@@ -116,6 +116,11 @@
     loadTodoDates().then(() => renderCalendar())
   }
 
+  function toLocalDateStr(raw: string): string {
+    const d = new Date(raw)
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  }
+
   async function loadTodoDates() {
     try {
       const res = await fetch('/api/todos')
@@ -123,7 +128,7 @@
       const todos: any[] = await res.json()
       todoDates.clear()
       for (const t of todos) {
-        if (t.due_date) todoDates.add(t.due_date.split('T')[0])
+        if (t.due_date) todoDates.add(toLocalDateStr(t.due_date))
       }
     } catch {}
   }
@@ -133,13 +138,14 @@
     const grid = document.getElementById('cal-days')
     if (!title || !grid) return
 
-    const monthNames = ['January','February','March','April','May','June',
-      'July','August','September','October','November','December']
-    title.textContent = `${monthNames[currentMonth]} ${currentYear}`
+    const monthNames = ['一月','二月','三月','四月','五月','六月',
+      '七月','八月','九月','十月','十一月','十二月']
+    title.textContent = `${currentYear}年 ${monthNames[currentMonth]}`
 
     const firstDay = new Date(currentYear, currentMonth, 1).getDay()
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
-    const today = new Date().toISOString().split('T')[0]
+    const todayDate = new Date()
+    const today = `${todayDate.getFullYear()}-${String(todayDate.getMonth() + 1).padStart(2, '0')}-${String(todayDate.getDate()).padStart(2, '0')}`
 
     grid.innerHTML = ''
 
