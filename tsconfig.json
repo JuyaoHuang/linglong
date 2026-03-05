@@ -23,7 +23,8 @@
       "@/plugins/*": ["src/plugins/*"],
       "@/pages/*": ["src/pages/*"],
       "@/types": ["src/types/index.ts"],
-      "@/site-config": ["src/site.config.ts"]
+      "@/site-config": ["src/site.config.ts"],
+      "@/lib/*": ["src/lib/*"]
     }
   },
   "exclude": ["node_modules", "**/node_modules/*", ".vscode", "dist", "public/scripts/*", "test/*", "eslint.config.mjs"]

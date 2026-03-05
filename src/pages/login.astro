@@ -1,0 +1,78 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+
+export const prerender = false
+---
+
+<BaseLayout meta={{ title: '登录' }}>
+  <main class="flex-1 flex items-center justify-center py-20">
+    <div class="w-full max-w-sm mx-auto">
+      <div class="rounded-2xl border border-border bg-background p-8 shadow-sm">
+        <h1 class="text-2xl font-medium mb-6 text-center">登录</h1>
+        <form id="login-form" class="space-y-4">
+          <div>
+            <label for="password" class="block text-sm font-medium text-muted-foreground mb-1.5">
+              密码
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              autocomplete="current-password"
+              class="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
+              placeholder="请输入密码"
+            />
+          </div>
+          <p id="error-msg" class="text-sm text-red-500 hidden"></p>
+          <button
+            type="submit"
+            class="w-full rounded-lg bg-primary px-4 py-2 text-sm font-medium text-background transition hover:opacity-90 disabled:opacity-50"
+          >
+            登录
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('login-form') as HTMLFormElement
+  const errorMsg = document.getElementById('error-msg') as HTMLParagraphElement
+  const passwordInput = document.getElementById('password') as HTMLInputElement
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    errorMsg.classList.add('hidden')
+
+    const password = passwordInput.value
+    if (!password) return
+
+    const btn = form.querySelector('button') as HTMLButtonElement
+    btn.disabled = true
+    btn.textContent = '登录中...'
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      })
+
+      if (res.ok) {
+        window.location.href = '/todo'
+      } else {
+        const data = await res.json()
+        errorMsg.textContent = data.error || '登录失败'
+        errorMsg.classList.remove('hidden')
+      }
+    } catch {
+      errorMsg.textContent = '网络错误'
+      errorMsg.classList.remove('hidden')
+    } finally {
+      btn.disabled = false
+      btn.textContent = '登录'
+    }
+  })
+</script>

@@ -1,0 +1,106 @@
+---
+// TodoItem.astro — Individual todo item with edit/delete/toggle
+---
+
+<template id="todo-item-template">
+  <div class="todo-item" data-id="">
+    <div class="todo-main">
+      <button class="toggle-btn" aria-label="切换完成状态">
+        <span class="check-icon"></span>
+      </button>
+      <div class="todo-content">
+        <span class="todo-title"></span>
+        <span class="todo-desc text-xs text-muted-foreground"></span>
+      </div>
+      <div class="todo-actions">
+        <button class="edit-btn text-xs text-muted-foreground hover:text-foreground" aria-label="编辑">
+          编辑
+        </button>
+        <button class="delete-btn text-xs text-red-400 hover:text-red-600" aria-label="删除">
+          删除
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style is:global>
+  .todo-item {
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--background));
+    transition: background 0.15s;
+  }
+  .todo-item:hover {
+    background: hsl(var(--muted));
+  }
+  .todo-item.completed .todo-title {
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+  .todo-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .toggle-btn {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.125rem;
+    border-radius: 50%;
+    border: 2px solid hsl(var(--border));
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .todo-item.completed .toggle-btn {
+    background: hsl(var(--primary));
+    border-color: hsl(var(--primary));
+  }
+  .check-icon {
+    display: none;
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+  .todo-item.completed .check-icon {
+    display: block;
+    color: hsl(var(--background));
+  }
+  .check-icon::after {
+    content: '✓';
+    font-size: 0.625rem;
+    color: hsl(var(--background));
+  }
+  .todo-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+  }
+  .todo-title {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+  .todo-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .todo-item:hover .todo-actions {
+    opacity: 1;
+  }
+  .todo-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.125rem 0.25rem;
+  }
+</style>
