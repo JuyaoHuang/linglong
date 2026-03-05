@@ -24,6 +24,7 @@
     "@astrojs/check": "^0.9.6",
     "@astrojs/rss": "^4.0.14",
     "@astrojs/vercel": "^9.0.3",
+    "@unocss/astro": "^66.6.0",
     "@neondatabase/serverless": "^1.0.2",
     "@waline/client": "^3.8.0",
     "astro": "^5.16.6",
