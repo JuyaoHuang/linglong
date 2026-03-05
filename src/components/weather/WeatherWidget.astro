@@ -402,9 +402,21 @@
     if (widget) widget.classList.add('weather-loaded')
   }
 
+  async function reverseGeocode(lat: number, lon: number): Promise<string> {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=zh-CN`
+      )
+      const data = await res.json()
+      return data.address?.city || data.address?.town || data.address?.county || data.address?.state || '当前位置'
+    } catch {
+      return '当前位置'
+    }
+  }
+
   async function loadWeather(lat?: number, lon?: number, city?: string) {
     try {
-      let name = city || '当前位置'
+      let name = city || ''
       if (!lat || !lon) {
         // Try geolocation
         const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
@@ -412,9 +424,10 @@
         })
         lat = pos.coords.latitude
         lon = pos.coords.longitude
+        if (!name) name = await reverseGeocode(lat, lon)
       }
       const data = await fetchWeather(lat, lon)
-      updateUI(data, name)
+      updateUI(data, name || '当前位置')
     } catch {
       const cityEl = document.getElementById('weather-city')
       if (cityEl) cityEl.textContent = '请在下方输入城市'
