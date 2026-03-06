@@ -8,7 +8,11 @@
 
 [English](./README.md)
 
-> 事以密成，语以泄败，是不可多言，福不可多晒。
+## 演示
+
+| 亮色模式 | 暗色模式 |
+|:---:|:---:|
+| ![Light Mode](./src/assets/showcase/light.png) | ![Dark Mode](./src/assets/showcase/dark.png) |
 
 ## 功能特性
 
@@ -30,6 +34,8 @@
 - **RSS 订阅** — 博客与文档均提供 RSS feed
 - **SEO 友好** — 自动生成 sitemap、robots.txt、社交卡片
 - **深色模式** — 自动跟随系统或手动切换
+- **紫色主题** — 从原项目迁移的自定义紫色配色方案，在导航、按钮、卡片、文章链接和目录高亮处保持一致的悬停效果
+- **首页背景** — 可通过 `site.config.ts` 在纯色渐变和自定义背景图片（支持明暗模式分别设置图片）之间切换
 - **响应式设计** — 适配移动端与桌面端
 - **字体优化** — 通过 Fontshare 加载 Satoshi 字体，自动预加载
 - **MDX 支持** — 在 Markdown 中使用组件
@@ -128,6 +134,9 @@ export const theme: ThemeUserConfig = {
   author: 'Juyao Huang',
   description: '...',
   // 导航菜单、页脚链接、社交账号等
+
+  // 首页背景：'gradient'（默认，纯色渐变）或 'image'（自定义背景图）
+  homepageBackground: 'gradient',
 }
 
 export const integ: IntegrationUserConfig = {
