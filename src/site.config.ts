@@ -7,7 +7,7 @@ export const theme: ThemeUserConfig = {
   /** Will be used in index page & copyright declaration */
   author: 'Juyao Huang',
   /** Description metadata for your website. Can be used in page metadata. */
-  description: '事以密成，语以泄败，是不可多言，福不可多晒。',
+  description: '事以密成，语以泄败，是故话不可多言，福不可多晒。',
   /** The default favicon for your site which should be a path to an image in the `public/` directory. */
   favicon: '/favicon/favicon.svg',
   /** The default social card image for your site which should be a path to an image in the `public/` directory. */
@@ -45,6 +45,13 @@ export const theme: ThemeUserConfig = {
   ],
   customCss: [],
 
+  /** Homepage background mode: 'gradient' for solid color gradient, 'image' for background image 
+      homepageBackground: 'image' as 'gradient' | 'image'
+      切换 'image' ↔ 'gradient' 即可。背景图片清晰度可在 src/pages/index.astro 的 .homepage-bg CSS 中调整 mask-image 的
+      rgba alpha 值（当前 0.4，增大则更清晰，减小则更淡）
+  */
+  homepageBackground: 'image',
+
   /** Configure the header of your site. */
   header: {
     menu: [
@@ -79,7 +86,7 @@ export const theme: ThemeUserConfig = {
     /** Enable displaying a “Astro & Pure theme powered” link in your site’s footer. */
     credits: true,
     /** Optional details about the social media accounts for this site. */
-    social: { github: 'https://github.com/JuyaoHuang' }
+    social: { github: 'https://github.com/JuyaoHuang/lingLong' }
   },
 
   // [Content]
@@ -147,7 +154,7 @@ export const integ: IntegrationUserConfig = {
     class: 'prose text-base', // UnoCSS 类名
     // The style of blockquote font `normal` / `italic` (default to italic in typography)
     // 引用块样式: '正常' / '斜体'
-    blockquoteStyle: 'normal',
+    blockquoteStyle: 'italic',
     // The style of inline code block `code` / `modern` (default to code in typography)
     // 行内代码样式: 'code' / 'modern'
     inlineCodeBlockStyle: 'code'
