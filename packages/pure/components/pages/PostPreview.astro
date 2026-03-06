@@ -26,7 +26,7 @@ const postDate = data.updatedDate ?? data.publishDate
 >
   <a
     class={cn(
-      'block w-full relative group rounded-2xl border bg-background transition-colors ease-in-out px-5 py-2.5 hover:bg-muted hover:text-primary',
+      'block w-full relative group rounded-2xl border bg-background transition-colors ease-in-out px-5 py-2.5 hover:bg-primary/8 hover:text-primary',
       detailed && 'max-sm:px-4 sm:py-5',
       detailed && data.heroImage && 'max-md:pt-24'
     )}
@@ -128,7 +128,7 @@ const postDate = data.updatedDate ?? data.publishDate
     .post-preview:hover {
       & > a,
       & .tag-list a {
-        background-color: var( --preview-highlight-bg, hsl(var(--muted) / var(--un-bg-opacity, 1))) !important;
+        background-color: var( --preview-highlight-bg, hsl(var(--primary) / 0.08)) !important;
       }
       & > a,
       & .tag-list a:hover {

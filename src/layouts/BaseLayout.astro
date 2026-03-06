@@ -16,7 +16,7 @@ interface Props {
 
 const {
   meta: { articleDate, description = config.description, ogImage, title },
-  highlightColor,
+  highlightColor = '#ad86ed',
   ...props
 } = Astro.props
 ---

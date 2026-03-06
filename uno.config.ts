@@ -16,7 +16,7 @@ const typographyConfig: TypographyOptions = {
     body: fgMuted,
     headings: fg,
     // "lead": [600, 400],
-    links: fg,
+    links: 'hsl(var(--primary) / var(--un-text-opacity, 1))',
     bold: fg,
     counters: 'hsl(var(--muted-foreground) / 0.6)',
     bullets: 'hsl(var(--muted-foreground) / 0.4)',
@@ -57,7 +57,11 @@ const typographyConfig: TypographyOptions = {
     a: {
       'word-wrap': 'break-word',
       'word-break': 'break-word',
-      'overflow-wrap': 'anywhere'
+      'overflow-wrap': 'anywhere',
+      'text-decoration': 'none'
+    },
+    'a:hover': {
+      'text-decoration': 'underline'
     },
     // Inline code
     ':not(pre) > code': {
@@ -87,7 +91,17 @@ const typographyConfig: TypographyOptions = {
       'border-radius': `calc(1.5 * ${radius})`,
       'padding-inline': '1.6rem',
       'box-shadow': `0 5px 0 ${bgMuted}`,
+      quotes: 'none',
       ...(typographyCustom.blockquoteStyle === 'normal' && { 'font-style': 'normal' })
+    },
+    'blockquote::before': {
+      content: 'none'
+    },
+    'blockquote p::before': {
+      content: 'none'
+    },
+    'blockquote p::after': {
+      content: 'none'
     },
     'blockquote::after': {
       color: fgMuted,

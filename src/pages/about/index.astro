@@ -34,7 +34,7 @@ const headings = [
       </span>
       <span class="text-base opacity-80 italic">
         <!-- <Spoiler>提及少年一词，应与平庸相斥</Spoiler> -->
-        <Spoiler>事以密成，语以泄败，是不可多言，福不可多晒。</Spoiler>
+        <Spoiler>事以密成，语以泄败，是故话不可多言，福不可多晒。</Spoiler>
       </span>
     </div>
   </div>
@@ -332,3 +332,10 @@ const headings = [
     </li>
   </ul>
 </PageLayout>
+
+<style is:global>
+  /* Override prose link color to foreground on about page */
+  #content a:not(.toc-item) {
+    color: hsl(var(--foreground) / var(--un-text-opacity, 1));
+  }
+</style>
