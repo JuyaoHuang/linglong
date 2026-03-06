@@ -16,7 +16,7 @@ const typographyConfig: TypographyOptions = {
     body: fgMuted,
     headings: fg,
     // "lead": [600, 400],
-    links: fg,
+    links: 'hsl(var(--primary) / var(--un-text-opacity, 1))',
     bold: fg,
     counters: 'hsl(var(--muted-foreground) / 0.6)',
     bullets: 'hsl(var(--muted-foreground) / 0.4)',
@@ -57,7 +57,11 @@ const typographyConfig: TypographyOptions = {
     a: {
       'word-wrap': 'break-word',
       'word-break': 'break-word',
-      'overflow-wrap': 'anywhere'
+      'overflow-wrap': 'anywhere',
+      'text-decoration': 'none'
+    },
+    'a:hover': {
+      'text-decoration': 'underline'
     },
     // Inline code
     ':not(pre) > code': {
