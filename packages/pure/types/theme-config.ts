@@ -87,6 +87,9 @@ export const ThemeConfigSchema = () =>
      */
     customCss: z.string().array().optional().default([]),
 
+    /** Homepage background mode: 'gradient' for solid color gradient, 'image' for background image */
+    homepageBackground: z.enum(['gradient', 'image']).optional().default('gradient'),
+
     /** Will be used as title delimiter in the generated `<title>` tag. */
     titleDelimiter: z
       .string()

@@ -13,6 +13,11 @@ import config from '@/site-config'
 import WeatherWidget from '@/components/weather/WeatherWidget.astro'
 import BuptImg from '@/assets/education/BUPT.svg'
 import NnsImg from '@/assets/education/nnsz.png'
+import Atri_light from '@/assets/backgrounds/atri-1.png'
+import Atri_dark from '@/assets/backgrounds/atri-2.png'
+
+// Background mode from site config ('gradient' or 'image')
+const backgroundMode = config.homepageBackground || 'gradient'
 
 const Web = ['Vue.js', 'Astro', 'Streamlit', 'node.js', 'Vite', 'JavaScript']
 const programming = ['FastAPI', 'PyTorch', 'Python', 'C++', 'Pydantic', 'SQL', 'Bash']
@@ -33,7 +38,25 @@ if (!images[imagePath])
   )
 ---
 
-<PageLayout meta={{ title: 'Home' }} highlightColor='#ad86ed'>
+<PageLayout meta={{ title: 'Home' }} highlightColor={backgroundMode === 'gradient' ? '#ad86ed' : undefined}>
+  {
+    backgroundMode === 'image' && (
+      <div class='homepage-bg pointer-events-none absolute start-0 top-0 z-0 h-screen w-full overflow-hidden'>
+        <Image
+          src={Atri_light}
+          alt='Background'
+          class='homepage-bg-light h-full w-full object-cover'
+          loading='eager'
+        />
+        <Image
+          src={Atri_dark}
+          alt='Background'
+          class='homepage-bg-dark h-full w-full object-cover absolute inset-0'
+          loading='eager'
+        />
+      </div>
+    )
+  }
   <WeatherWidget />
   <main class='flex w-full flex-col items-center'>
     <section class='animate mb-10 flex flex-col items-center gap-y-7' id='content-header'>
@@ -219,6 +242,19 @@ if (!images[imagePath])
 <style>
   .avatar-rotate {
     transition: transform 0.5s ease-out;
+  }
+  .homepage-bg {
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1.0) 0%, transparent 100%);
+  }
+  .homepage-bg-dark {
+    display: none;
+  }
+  :global(.dark) .homepage-bg-light {
+    display: none;
+  }
+  :global(.dark) .homepage-bg-dark {
+    display: block;
   }
 </style>
 
