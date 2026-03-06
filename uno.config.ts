@@ -91,7 +91,17 @@ const typographyConfig: TypographyOptions = {
       'border-radius': `calc(1.5 * ${radius})`,
       'padding-inline': '1.6rem',
       'box-shadow': `0 5px 0 ${bgMuted}`,
+      quotes: 'none',
       ...(typographyCustom.blockquoteStyle === 'normal' && { 'font-style': 'normal' })
+    },
+    'blockquote::before': {
+      content: 'none'
+    },
+    'blockquote p::before': {
+      content: 'none'
+    },
+    'blockquote p::after': {
+      content: 'none'
     },
     'blockquote::after': {
       color: fgMuted,
