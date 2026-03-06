@@ -8,11 +8,29 @@ import { Icon } from '../user'
   class='group sticky top-4 z-50 max-md:z-30 mb-12 flex items-center justify-between rounded-xl border border-transparent max-sm:py-1 sm:rounded-2xl'
 >
   <a
-    class='z-30 text-xl font-medium group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3'
+    class='z-30 flex items-center gap-x-1.5 text-xl font-medium text-primary group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3'
     style='transition:margin-inline 0.3s'
     href='/'
-    aria-label='Brand'>{config.title}</a
+    aria-label='Brand'
   >
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      stroke-linecap='round'
+      stroke-linejoin='round'
+      stroke-width='1.5'
+      class='size-6'
+    >
+      <path
+        d='m2.25 12l8.955-8.955a1.124 1.124 0 0 1 1.59 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25'
+      />
+    </svg>
+    {config.title}
+  </a>
 
   <div class='flex items-center gap-x-2'>
     {/* Menu links */}
