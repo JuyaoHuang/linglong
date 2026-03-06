@@ -94,16 +94,7 @@ const typographyConfig: TypographyOptions = {
       ...(typographyCustom.blockquoteStyle === 'normal' && { 'font-style': 'normal' })
     },
     'blockquote::after': {
-      color: fgMuted,
-      position: 'absolute',
-      content: '"”"',
-      top: '2.6rem',
-      right: '-1.4rem',
-      'font-size': '10rem',
-      'font-family':
-        '"Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif',
-      transform: 'rotate(-15deg)',
-      opacity: '0.1'
+      content: 'none'
     },
     // Table
     table: { display: 'block', 'font-size': '.875em' },
