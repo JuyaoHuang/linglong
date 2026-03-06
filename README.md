@@ -8,6 +8,12 @@ A personal blog site built on [Astro Theme Pure](https://github.com/cworld1/astr
 
 [中文文档](./README-zh-CN.md)
 
+## Demo
+
+| Light Mode | Dark Mode |
+|:---:|:---:|
+| ![Light Mode](./src/assets/showcase/light.png) | ![Dark Mode](./src/assets/showcase/dark.png) |
+
 ## Features
 
 - **Blog** — Hierarchical categories (two levels), tags, archives, and pagination
@@ -28,6 +34,8 @@ A personal blog site built on [Astro Theme Pure](https://github.com/cworld1/astr
 - **RSS feeds** — Available for both blog and docs
 - **SEO** — Auto-generated sitemap, robots.txt, and social cards
 - **Dark mode** — Follows system preference or manual toggle
+- **Purple theme** — Custom purple color scheme migrated from the original project, with consistent hover effects across navigation, buttons, cards, article links, and TOC highlights
+- **Homepage background** — Switchable between solid color gradient and custom background image (with separate light/dark mode images) via `site.config.ts`
 - **Responsive** — Mobile and desktop friendly
 - **Font optimization** — Satoshi font via Fontshare with automatic preloading
 - **MDX support** — Use components inside Markdown
@@ -126,6 +134,9 @@ export const theme: ThemeUserConfig = {
   author: 'Juyao Huang',
   description: '...',
   // Header menu, footer links, social accounts, etc.
+
+  // Homepage background: 'gradient' (default) or 'image'
+  homepageBackground: 'gradient',
 }
 
 export const integ: IntegrationUserConfig = {

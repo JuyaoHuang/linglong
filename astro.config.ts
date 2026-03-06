@@ -39,10 +39,8 @@ export default defineConfig({
   // [Adapter]
   // https://docs.astro.build/en/guides/deploy/
   adapter: vercel(),
-  // adapter: node({
-  // mode: 'standalone',
-  //   }),
   output: 'server',
+
   // Local (standalone)
   // adapter: node({ mode: 'standalone' }),
   // output: 'server',
