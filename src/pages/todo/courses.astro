@@ -1,0 +1,32 @@
+---
+import 'katex/dist/katex.min.css'
+
+import { TOC } from 'astro-pure/components/pages'
+import ContentLayout from '@/layouts/ContentLayout.astro'
+
+export const prerender = true
+
+const post = await import('../../assets/lesson_class/courses.md')
+const { Content, frontmatter } = post
+const headings = post.getHeadings()
+---
+
+<ContentLayout
+  meta={{ title: frontmatter.title, description: frontmatter.description }}
+  back='/todo'
+>
+  {!!headings.length && <TOC {headings} slot='sidebar' />}
+
+  <Fragment slot='header'>
+    <h1 class='text-2xl font-medium sm:mb-2 sm:text-3xl'>
+      {frontmatter.title}
+    </h1>
+    {frontmatter.description && (
+      <div class='mt-4 text-sm italic text-muted-foreground'>
+        <q>{frontmatter.description}</q>
+      </div>
+    )}
+  </Fragment>
+
+  <Content />
+</ContentLayout>

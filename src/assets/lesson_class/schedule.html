@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大三下学期课表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --bg:#f7f5f0;
+    --bg-card:#fffef9;
+    --ink:#1c1917;
+    --ink-soft:#57534e;
+    --ink-muted:#a8a29e;
+    --line:#e7e5e4;
+    --line-light:#f0eeeb;
+
+    --c-required:#1e3a5f;
+    --c-required-bg:#e8eef5;
+    --c-required-border:#bccfdf;
+
+    --c-chosen:#1a5c45;
+    --c-chosen-bg:#e4f2ec;
+    --c-chosen-border:#b3d9c8;
+
+    --c-elective:#8b5a1b;
+    --c-elective-bg:#faf0e2;
+    --c-elective-border:#e0c9a0;
+
+    --c-other:#5b4a6a;
+    --c-other-bg:#f0ebf4;
+    --c-other-border:#cfc3d9;
+
+    --radius:10px;
+    --shadow:0 1px 3px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.03);
+  }
+
+  html{font-size:15px;scroll-behavior:smooth}
+
+  body{
+    font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.7;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ── header ── */
+  header{
+    max-width:1100px;
+    margin:0 auto;
+    padding:56px 32px 0;
+    text-align:center;
+  }
+  header .badge{
+    display:inline-block;
+    font-size:.75rem;
+    font-weight:500;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+    border:1px solid var(--line);
+    border-radius:100px;
+    padding:4px 16px;
+    margin-bottom:16px;
+  }
+  header h1{
+    font-family:"Noto Serif SC",serif;
+    font-weight:900;
+    font-size:2.6rem;
+    line-height:1.25;
+    letter-spacing:-.02em;
+    color:var(--ink);
+  }
+  header p.sub{
+    margin-top:10px;
+    font-size:.95rem;
+    color:var(--ink-soft);
+    font-weight:300;
+  }
+
+  /* ── legend ── */
+  .legend{
+    display:flex;
+    justify-content:center;
+    gap:24px;
+    margin-top:28px;
+    flex-wrap:wrap;
+  }
+  .legend-item{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:.82rem;
+    font-weight:500;
+    color:var(--ink-soft);
+  }
+  .legend-dot{
+    width:12px;height:12px;
+    border-radius:3px;
+  }
+  .legend-dot.required{background:var(--c-required)}
+  .legend-dot.chosen{background:var(--c-chosen)}
+  .legend-dot.elective{background:var(--c-elective)}
+  .legend-dot.other{background:var(--c-other)}
+
+  /* ── timetable grid ── */
+  .timetable-wrap{
+    max-width:1100px;
+    margin:40px auto 0;
+    padding:0 24px;
+  }
+
+  .timetable{
+    display:grid;
+    grid-template-columns:100px repeat(5,1fr);
+    grid-template-rows:auto;
+    background:var(--bg-card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+    overflow:hidden;
+  }
+
+  .t-header{
+    background:#faf9f6;
+    font-weight:600;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    text-align:center;
+    padding:14px 6px;
+    border-bottom:1px solid var(--line);
+  }
+  .t-header:not(:last-child){border-right:1px solid var(--line-light)}
+  .t-header.corner{
+    font-size:.72rem;
+    color:var(--ink-muted);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .t-time{
+    font-size:.78rem;
+    font-weight:500;
+    color:var(--ink-muted);
+    text-align:center;
+    padding:10px 4px;
+    border-right:1px solid var(--line-light);
+    border-bottom:1px solid var(--line-light);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    background:#faf9f6;
+  }
+  .t-time .period{
+    font-size:.82rem;
+    font-weight:600;
+    color:var(--ink-soft);
+  }
+  .t-time .clock{
+    font-size:.62rem;
+    font-weight:400;
+    color:var(--ink-muted);
+    line-height:1.3;
+    letter-spacing:-.01em;
+  }
+
+  .t-cell{
+    padding:6px;
+    border-right:1px solid var(--line-light);
+    border-bottom:1px solid var(--line-light);
+    min-height:74px;
+    position:relative;
+  }
+  .t-cell:nth-child(6n){border-right:none}
+
+  .course-block{
+    border-radius:7px;
+    padding:8px 10px;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:2px;
+    transition:transform .15s ease, box-shadow .15s ease;
+    cursor:default;
+    border-left:3px solid transparent;
+  }
+  .course-block:hover{
+    transform:translateY(-1px);
+    box-shadow:0 3px 10px rgba(0,0,0,.07);
+  }
+
+  .course-block.required{
+    background:var(--c-required-bg);
+    border-left-color:var(--c-required);
+  }
+  .course-block.chosen{
+    background:var(--c-chosen-bg);
+    border-left-color:var(--c-chosen);
+  }
+  .course-block.elective{
+    background:var(--c-elective-bg);
+    border-left-color:var(--c-elective);
+  }
+  .course-block.other{
+    background:var(--c-other-bg);
+    border-left-color:var(--c-other);
+  }
+
+  .course-block .name{
+    font-size:.82rem;
+    font-weight:600;
+    line-height:1.3;
+  }
+  .course-block.required .name{color:var(--c-required)}
+  .course-block.chosen .name{color:var(--c-chosen)}
+  .course-block.elective .name{color:var(--c-elective)}
+  .course-block.other .name{color:var(--c-other)}
+
+  .course-block .loc{
+    font-size:.72rem;
+    color:var(--ink-muted);
+    font-weight:400;
+  }
+
+  /* ── table section ── */
+  .table-section{
+    max-width:1100px;
+    margin:52px auto 0;
+    padding:0 24px 64px;
+  }
+  .table-section h2{
+    font-family:"Noto Serif SC",serif;
+    font-weight:700;
+    font-size:1.5rem;
+    margin-bottom:24px;
+    color:var(--ink);
+    text-align:center;
+  }
+
+  .styled-table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    background:var(--bg-card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+    overflow:hidden;
+  }
+
+  .styled-table thead th{
+    background:#faf9f6;
+    font-weight:600;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:14px 20px;
+    border-bottom:2px solid var(--line);
+    letter-spacing:.03em;
+  }
+
+  .styled-table tbody tr{
+    transition:background .12s ease;
+  }
+  .styled-table tbody tr:hover{
+    background:#faf8f4;
+  }
+  .styled-table tbody td{
+    padding:13px 20px;
+    font-size:.88rem;
+    border-bottom:1px solid var(--line-light);
+    vertical-align:middle;
+  }
+  .styled-table tbody tr:last-child td{border-bottom:none}
+
+  .styled-table .cat-tag{
+    display:inline-block;
+    font-size:.7rem;
+    font-weight:600;
+    padding:2px 10px;
+    border-radius:100px;
+    letter-spacing:.04em;
+  }
+  .cat-tag.required{background:var(--c-required-bg);color:var(--c-required)}
+  .cat-tag.chosen{background:var(--c-chosen-bg);color:var(--c-chosen)}
+  .cat-tag.elective{background:var(--c-elective-bg);color:var(--c-elective)}
+  .cat-tag.other{background:var(--c-other-bg);color:var(--c-other)}
+
+  .styled-table .course-name{
+    font-weight:500;
+  }
+
+  /* ── footer ── */
+  footer{
+    text-align:center;
+    padding:0 24px 48px;
+    font-size:.78rem;
+    color:var(--ink-muted);
+    font-weight:300;
+  }
+
+  /* ── animation ── */
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(12px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  .timetable-wrap,.table-section{
+    animation:fadeUp .5s ease both;
+  }
+  .table-section{animation-delay:.12s}
+
+  /* ── responsive ── */
+  @media(max-width:768px){
+    header{padding:36px 20px 0}
+    header h1{font-size:1.8rem}
+    .legend{gap:14px}
+    .timetable-wrap{
+      overflow-x:auto;
+      padding:0 12px;
+    }
+    .timetable{
+      min-width:680px;
+    }
+    .table-section{padding:0 12px 48px}
+    .styled-table thead th,
+    .styled-table tbody td{padding:10px 12px;font-size:.82rem}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">2025 – 2026 春季学期</div>
+  <h1>大三下学期课表</h1>
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot required"></span>必修</span>
+    <span class="legend-item"><span class="legend-dot chosen"></span>必选</span>
+    <span class="legend-item"><span class="legend-dot elective"></span>选修</span>
+    <span class="legend-item"><span class="legend-dot other"></span>其他</span>
+  </div>
+</header>
+
+<!-- ═══════ Weekly Timetable Grid ═══════ -->
+<div class="timetable-wrap">
+  <div class="timetable">
+    <!-- header row -->
+    <div class="t-header corner">节次</div>
+    <div class="t-header">周一</div>
+    <div class="t-header">周二</div>
+    <div class="t-header">周三</div>
+    <div class="t-header">周四</div>
+    <div class="t-header">周五</div>
+
+    <!-- row: 1-2 节 -->
+    <div class="t-time"><span class="period">1-2 节</span><span class="clock">08:00 – 09:35</span></div>
+    <div class="t-cell">
+      <div class="course-block required">
+        <span class="name">通信网理论基础</span>
+        <span class="loc">教三 540</span>
+      </div>
+    </div>
+    <div class="t-cell"></div>
+    <div class="t-cell"></div>
+    <div class="t-cell">
+      <div class="course-block elective">
+        <span class="name">软件定义网络 SDN</span>
+        <span class="loc">教三 337</span>
+      </div>
+    </div>
+    <div class="t-cell"></div>
+
+    <!-- row: 3-4 节 -->
+    <div class="t-time"><span class="period">3-4 节</span><span class="clock">09:50 – 11:25</span></div>
+    <div class="t-cell"></div>
+    <div class="t-cell"></div>
+    <div class="t-cell"></div>
+    <div class="t-cell">
+      <div class="course-block chosen">
+        <span class="name">自由泳</span>
+        <span class="loc">游泳馆</span>
+      </div>
+    </div>
+    <div class="t-cell">
+      <div class="course-block elective">
+        <span class="name">智能音频处理</span>
+        <span class="loc">教三 539</span>
+      </div>
+    </div>
+
+    <!-- row: 6-8 节 -->
+    <div class="t-time"><span class="period">6-8 节</span><span class="clock">13:00 – 15:30</span></div>
+    <div class="t-cell">
+      <div class="course-block chosen">
+        <span class="name">网络管理课程设计</span>
+        <span class="loc">教四 112</span>
+      </div>
+    </div>
+    <div class="t-cell">
+      <div class="course-block required">
+        <span class="name">信息网络建模与仿真</span>
+        <span class="loc">主楼 321-322</span>
+      </div>
+    </div>
+    <div class="t-cell"></div>
+    <div class="t-cell">
+      <div class="course-block chosen">
+        <span class="name">区块链</span>
+        <span class="loc">教三 337</span>
+      </div>
+    </div>
+    <div class="t-cell"></div>
+
+    <!-- row: 8-9 节 -->
+    <div class="t-time"><span class="period">8-9 节</span><span class="clock">14:45 – 16:25</span></div>
+    <div class="t-cell"></div>
+    <div class="t-cell"></div>
+    <div class="t-cell"></div>
+    <div class="t-cell"></div>
+    <div class="t-cell">
+      <div class="course-block elective">
+        <span class="name">生物信息基础</span>
+        <span class="loc">主楼 309</span>
+      </div>
+    </div>
+
+    <!-- row: 9-11 节 -->
+    <div class="t-time"><span class="period">9-11 节</span><span class="clock">15:40 – 18:10</span></div>
+    <div class="t-cell">
+      <div class="course-block other">
+        <span class="name">操作系统</span>
+        <span class="loc">教三 317</span>
+      </div>
+    </div>
+    <div class="t-cell">
+      <div class="course-block required">
+        <span class="name">通信原理实验</span>
+        <span class="loc">主楼 609</span>
+      </div>
+    </div>
+    <div class="t-cell"></div>
+    <div class="t-cell">
+      <div class="course-block other">
+        <span class="name">计算机组成原理</span>
+        <span class="loc">教四 313</span>
+      </div>
+    </div>
+    <div class="t-cell">
+      <div class="course-block elective">
+        <span class="name">网络管理</span>
+        <span class="loc">教三 437</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ Detailed Table ═══════ -->
+<div class="table-section">
+  <h2>课程明细</h2>
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>类别</th>
+        <th>课程名称</th>
+        <th>时间</th>
+        <th>地点</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="cat-tag required">必修</span></td>
+        <td class="course-name">通信网理论基础</td>
+        <td>周一 1-2 节</td>
+        <td>教三 540</td>
+      </tr>
+      <tr>
+        <td><span class="cat-tag required">必修</span></td>
+        <td class="course-name">信息网络建模与仿真</td>
+        <td>周二 6-8 节</td>
+        <td>主楼 321-322</td>
+      </tr>
+      <tr>
+        <td><span class="cat-tag required">必修</span></td>
+        <td class="course-name">通信原理实验</td>
+        <td>周二 9-11 节</td>
+        <td>主楼 609</td>
+      </tr>
+      <tr>
+        <td><span class="cat-tag chosen">必选</span></td>
+        <td class="course-name">网络管理课程设计</td>
+        <td>周一 6-8 节</td>
+        <td>教四 112</td>
+      </tr>
+      <tr>
+        <td><span class="cat-tag chosen">必选</span></td>
+        <td class="course-name">区块链</td>
+        <td>周四 6-8 节</td>
+        <td>教三 337</td>
+      </tr>
+      <tr>
+        <td><span class="cat-tag chosen">必选</span></td>
+        <td class="course-name">自由泳</td>
+        <td>周四 3-4 节</td>
+        <td>游泳馆</td>
+      </tr>
+      <tr>
+        <td><span class="cat-tag elective">选修</span></td>
+        <td class="course-name">软件定义网络 SDN</td>
+        <td>周四 1-2 节</td>
+        <td>教三 337</td>
+      </tr>
+      <tr>
+        <td><span class="cat-tag elective">选修</span></td>
+        <td class="course-name">智能音频处理</td>
+        <td>周五 3-4 节</td>
+        <td>教三 539</td>
+      </tr>
+      <tr>
+        <td><span class="cat-tag elective">选修</span></td>
+        <td class="course-name">生物信息基础</td>
+        <td>周五 8-9 节</td>
+        <td>主楼 309</td>
+      </tr>
+      <tr>
+        <td><span class="cat-tag elective">选修</span></td>
+        <td class="course-name">网络管理</td>
+        <td>周五 10-11 节</td>
+        <td>教三 437</td>
+      </tr>
+      <tr>
+        <td><span class="cat-tag other">其他</span></td>
+        <td class="course-name">操作系统</td>
+        <td>周一 9-11 节</td>
+        <td>教三 317</td>
+      </tr>
+      <tr>
+        <td><span class="cat-tag other">其他</span></td>
+        <td class="course-name">计算机组成原理</td>
+        <td>周四 9-11 节</td>
+        <td>教四 313</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>大三下学期 · 课程总览</footer>
+
+</body>
+</html>

@@ -3,9 +3,10 @@ import { defineMiddleware } from 'astro:middleware'
 export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname } = context.url
 
-  // Only protect /todo and /api/todos routes
+  // Only protect /todo (exact) and /api/todos routes
+  // /todo/courses and /todo/schedule are public content pages
   const isProtected =
-    pathname.startsWith('/todo') || pathname.startsWith('/api/todos')
+    pathname === '/todo' || pathname.startsWith('/api/todos')
 
   // Don't protect auth routes
   const isAuthRoute = pathname.startsWith('/api/auth')

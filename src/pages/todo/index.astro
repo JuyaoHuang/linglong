@@ -13,6 +13,17 @@ export const prerender = false
       <h1 class="text-2xl font-medium">待办日历</h1>
     </div>
 
+    <section class="nav-cards">
+      <a href="/todo/courses" class="nav-card">
+        <div class="nav-card-title">课程要求</div>
+        <div class="nav-card-desc">大三下学期课程详情与考核方式</div>
+      </a>
+      <a href="/todo/schedule" class="nav-card">
+        <div class="nav-card-title">课表</div>
+        <div class="nav-card-desc">每周课程时间安排</div>
+      </a>
+    </section>
+
     <section class="chart-section">
       <ContributionChart />
     </section>
@@ -33,6 +44,39 @@ export const prerender = false
   }
   .todo-page-header {
     margin-bottom: 1.5rem;
+  }
+  .nav-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .nav-card {
+    display: block;
+    padding: 1rem 1.25rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .nav-card:hover {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 2px 8px hsl(var(--primary) / 0.08);
+  }
+  .nav-card-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+  .nav-card-desc {
+    font-size: 0.8rem;
+    color: hsl(var(--muted-foreground));
+  }
+  @media (max-width: 480px) {
+    .nav-cards {
+      grid-template-columns: 1fr;
+    }
   }
   .chart-section {
     margin-bottom: 1.5rem;
