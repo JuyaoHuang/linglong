@@ -1,0 +1,250 @@
+---
+import fs from 'node:fs'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { Button } from 'astro-pure/user'
+
+export const prerender = true
+
+// Read the schedule HTML file
+const htmlPath = new URL('../../assets/lesson_class/schedule.html', import.meta.url)
+const rawHtml = fs.readFileSync(htmlPath, 'utf-8')
+
+// Extract style content
+const styleMatch = rawHtml.match(/<style>([\s\S]*?)<\/style>/)
+const rawStyles = styleMatch ? styleMatch[1] : ''
+
+// Extract body content
+const bodyMatch = rawHtml.match(/<body>([\s\S]*?)<\/body>/)
+const bodyContent = bodyMatch ? bodyMatch[1] : ''
+
+// Scope CSS to avoid conflicts with site layout
+// - :root/html/body → .schedule-embed (wrapper div)
+// - bare header/footer → .schedule-embed header/footer (avoid site header/footer)
+const scopedStyles = rawStyles
+  .replaceAll(':root', '.schedule-embed')
+  .replace(/^\s+html\{/gm, '  .schedule-embed{')
+  .replace(/^\s+body\{/gm, '  .schedule-embed{')
+  .replace(/^(\s+)header(?=[\s{])/gm, '$1.schedule-embed header')
+  .replace(/^(\s+)footer(?=[\s{])/gm, '$1.schedule-embed footer')
+---
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@300;400;500;600&display=swap"
+  rel="stylesheet"
+/>
+
+<BaseLayout meta={{ title: '大三下学期课表', description: '大三下学期课表' }}>
+  <Button title='Back' href='/todo' variant='back' />
+  <div class="schedule-embed" set:html={bodyContent} />
+</BaseLayout>
+
+<Fragment set:html={`<style>${scopedStyles}</style>`} />
+
+<style is:global>
+  /* ── Mobile: tablets and small laptops ── */
+  @media (max-width: 768px) {
+    .schedule-embed header {
+      padding: 24px 16px 0;
+    }
+    .schedule-embed header h1 {
+      font-size: 1.6rem;
+    }
+    .schedule-embed .legend {
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .schedule-embed .timetable {
+      min-width: 560px;
+      grid-template-columns: 64px repeat(5, 1fr);
+    }
+    .schedule-embed .t-header {
+      font-size: 0.76rem;
+      padding: 10px 3px;
+    }
+    .schedule-embed .t-time {
+      padding: 6px 2px;
+    }
+    .schedule-embed .t-time .period {
+      font-size: 0.72rem;
+    }
+    .schedule-embed .t-time .clock {
+      font-size: 0.52rem;
+    }
+    .schedule-embed .course-block {
+      padding: 4px 5px;
+      border-left-width: 2px;
+    }
+    .schedule-embed .course-block .name {
+      font-size: 0.72rem;
+    }
+    .schedule-embed .course-block .loc {
+      font-size: 0.6rem;
+    }
+    .schedule-embed .t-cell {
+      min-height: 52px;
+      padding: 3px;
+    }
+    .schedule-embed .timetable-wrap {
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      padding: 0 8px;
+      position: relative;
+    }
+    .schedule-embed .table-section {
+      padding: 0 12px 40px;
+      margin-top: 36px;
+    }
+    .schedule-embed .table-section h2 {
+      font-size: 1.2rem;
+    }
+  }
+
+  /* ── Mobile: phones ── */
+  @media (max-width: 480px) {
+    .schedule-embed header {
+      padding: 16px 12px 0;
+    }
+    .schedule-embed header h1 {
+      font-size: 1.35rem;
+    }
+    .schedule-embed header .badge {
+      font-size: 0.65rem;
+      padding: 3px 10px;
+      margin-bottom: 10px;
+    }
+    .schedule-embed header p.sub {
+      font-size: 0.78rem;
+    }
+    .schedule-embed .legend {
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .schedule-embed .legend-item {
+      font-size: 0.72rem;
+    }
+
+    /* Timetable grid: maximally compact */
+    .schedule-embed .timetable-wrap {
+      margin-top: 24px;
+      padding: 0 4px;
+    }
+    .schedule-embed .timetable {
+      min-width: 420px;
+      grid-template-columns: 40px repeat(5, 1fr);
+    }
+    .schedule-embed .t-header {
+      font-size: 0.68rem;
+      padding: 8px 2px;
+    }
+    .schedule-embed .t-header.corner {
+      font-size: 0.58rem;
+    }
+    .schedule-embed .t-time {
+      padding: 4px 1px;
+    }
+    .schedule-embed .t-time .period {
+      font-size: 0.64rem;
+    }
+    .schedule-embed .t-time .clock {
+      font-size: 0.48rem;
+      display: none;
+    }
+    .schedule-embed .course-block {
+      padding: 3px 4px;
+      border-left-width: 2px;
+      border-radius: 4px;
+      gap: 0;
+    }
+    .schedule-embed .course-block .name {
+      font-size: 0.62rem;
+      line-height: 1.2;
+    }
+    .schedule-embed .course-block .loc {
+      font-size: 0.52rem;
+    }
+    .schedule-embed .t-cell {
+      min-height: 42px;
+      padding: 2px;
+    }
+
+    /* Detail table → card layout */
+    .schedule-embed .table-section {
+      margin-top: 28px;
+      padding: 0 8px 32px;
+    }
+    .schedule-embed .table-section h2 {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+    }
+    .schedule-embed .styled-table {
+      border: none;
+      box-shadow: none;
+      background: transparent;
+    }
+    .schedule-embed .styled-table thead {
+      display: none;
+    }
+    .schedule-embed .styled-table tbody tr {
+      display: block;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+    .schedule-embed .styled-table tbody tr:hover {
+      background: var(--bg-card);
+    }
+    .schedule-embed .styled-table tbody td {
+      display: block;
+      padding: 2px 0;
+      border-bottom: none;
+      font-size: 0.82rem;
+    }
+    .schedule-embed .styled-table tbody td:first-child {
+      margin-bottom: 4px;
+    }
+    .schedule-embed .styled-table tbody td:nth-child(2) {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+    .schedule-embed .styled-table tbody td:nth-child(3),
+    .schedule-embed .styled-table tbody td:nth-child(4) {
+      display: inline;
+      color: var(--ink-muted);
+      font-size: 0.76rem;
+    }
+    .schedule-embed .styled-table tbody td:nth-child(3)::after {
+      content: ' \00b7  ';
+    }
+
+    .schedule-embed footer {
+      padding: 0 12px 24px;
+      font-size: 0.7rem;
+    }
+  }
+
+  /* ── Mobile: very small phones (≤360px) ── */
+  @media (max-width: 360px) {
+    .schedule-embed .timetable {
+      min-width: 360px;
+      grid-template-columns: 34px repeat(5, 1fr);
+    }
+    .schedule-embed .t-header {
+      font-size: 0.62rem;
+      padding: 6px 1px;
+    }
+    .schedule-embed .course-block .name {
+      font-size: 0.56rem;
+    }
+    .schedule-embed .course-block .loc {
+      font-size: 0.48rem;
+    }
+    .schedule-embed .t-cell {
+      min-height: 38px;
+    }
+  }
+</style>
