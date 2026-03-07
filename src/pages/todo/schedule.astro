@@ -1,13 +1,9 @@
 ---
-import fs from 'node:fs'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import { Button } from 'astro-pure/user'
+import rawHtml from '../../assets/lesson_class/schedule.html?raw'
 
 export const prerender = true
-
-// Read the schedule HTML file
-const htmlPath = new URL('../../assets/lesson_class/schedule.html', import.meta.url)
-const rawHtml = fs.readFileSync(htmlPath, 'utf-8')
 
 // Extract style content
 const styleMatch = rawHtml.match(/<style>([\s\S]*?)<\/style>/)
