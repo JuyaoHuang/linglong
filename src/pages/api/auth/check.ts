@@ -1,19 +1,22 @@
 import type { APIRoute } from 'astro'
 
+import { verifyToken } from '@/utils/auth'
+
 export const prerender = false
 
 export const GET: APIRoute = async ({ cookies }) => {
   const session = cookies.get('session')?.value
-  if (!session) {
+  const adminPassword = import.meta.env.ADMIN_PASSWORD
+
+  if (!session || !adminPassword) {
     return new Response(JSON.stringify({ authenticated: false }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     })
   }
 
-  // Validate token format: timestamp.hash
-  const parts = session.split('.')
-  if (parts.length !== 2) {
+  const valid = await verifyToken(session, adminPassword)
+  if (!valid) {
     return new Response(JSON.stringify({ authenticated: false }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }

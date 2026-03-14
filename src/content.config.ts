@@ -59,4 +59,25 @@ const docs = defineCollection({
     })
 })
 
-export const collections = { blog, docs }
+// Define diary collection (simplified blog schema, no categories)
+const diary = defineCollection({
+  loader: glob({ base: './src/content/diary_notes', pattern: '**/*.{md,mdx}' }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string().max(60),
+      description: z.string().max(160),
+      publishDate: z.coerce.date(),
+      updatedDate: z.coerce.date().optional(),
+      heroImage: z
+        .object({
+          src: image(),
+          alt: z.string().optional(),
+          color: z.string().optional()
+        })
+        .optional(),
+      tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
+      draft: z.boolean().default(false)
+    })
+})
+
+export const collections = { blog, docs, diary }

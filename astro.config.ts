@@ -6,6 +6,7 @@ import AstroPureIntegration from 'astro-pure'
 import { defineConfig, fontProviders } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
+import remarkGfm from 'remark-gfm'
 // 如果要部署到 Vercel，注意将适配器 adapter: node({ 改为 adapter: vercel()
 // npm install astro-mermaid mermaid --registry=https://registry.npmmirror.com/
 // Local integrations
@@ -55,7 +56,7 @@ export default defineConfig({
 
   // [Markdown]
   markdown: {
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [remarkMath, remarkGfm],
     rehypePlugins: [
       [rehypeKatex, {}],
       rehypeHeadingIds,

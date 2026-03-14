@@ -1,6 +1,6 @@
 # LingLong
 
-A personal blog site built on [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) — clean, fast, and feature-rich.
+A personal blog site — clean, fast, and feature-rich.
 
 [![GitHub deployments](https://img.shields.io/github/deployments/JuyaoHuang/lingLong/production?style=flat&logo=vercel&label=vercel)](https://www.juayohuang.top/)
 [![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?style=flat&logo=astro)](https://astro.build/)
@@ -26,6 +26,8 @@ A personal blog site built on [Astro Theme Pure](https://github.com/cworld1/astr
 - **Word count** — Post list cards show word count instead of estimated reading time
 - **Weather widget** — Floating card on wide screens (>1400px); current conditions + 3-day forecast with [Chart.js](https://www.chartjs.org/) temperature/precipitation chart; auto-geolocation with [Nominatim](https://nominatim.org/) reverse geocoding; hourly detail panel; dark/light mode support
 - **Todo calendar** — Password-protected todo management page backed by [Neon](https://neon.tech/) PostgreSQL; GitHub-style 52-week contribution heatmap, monthly calendar with due-date markers, slide-in CRUD panel
+- **Private diary** — Password-protected diary system with blog-like rendering (list, detail, tags, archives); content stored in a [private git submodule](https://github.com/JuyaoHuang/diary-notes); interactive task checkboxes with Neon DB persistence; SSR-only (content never exposed as static HTML)
+- **Authentication** — HMAC-SHA256 signed tokens with 2-hour expiry; login rate limiting (5/min, 100/hour per IP); protects todo, diary, and related API routes
 - **Avatar interaction** — Exponential spin animation on avatar hover
 - **Friend links** — Links page with an activity logbook
 - **Projects showcase** — Dedicated page for personal projects
@@ -50,7 +52,7 @@ A personal blog site built on [Astro Theme Pure](https://github.com/cworld1/astr
 | Deployment | [Vercel](https://vercel.com/) |
 | Package Manager | [Bun](https://bun.sh/) |
 | Theme Package | [astro-pure](https://www.npmjs.com/package/astro-pure) |
-| Database | [Neon](https://neon.tech/) PostgreSQL (serverless, for todos) |
+| Database | [Neon](https://neon.tech/) PostgreSQL (serverless, for todos + diary tasks) |
 | Charts | [Chart.js](https://www.chartjs.org/) (weather widget) |
 
 ## Getting Started
@@ -99,14 +101,16 @@ bun preview
 │   │   └── ...             # Other custom components
 │   ├── content/
 │   │   ├── blog/           # Blog posts (organized by category/subcategory)
+│   │   ├── diary_notes/    # Private diary entries (git submodule → private repo)
 │   │   └── docs/           # Documentation content
-│   ├── layouts/            # Page layouts
+│   ├── layouts/            # Page layouts (BlogPost, DiaryPost, etc.)
 │   ├── lib/                # Database helpers (Neon connection)
-│   ├── middleware.ts        # Auth middleware (protects /todo and /api/todos)
+│   ├── middleware.ts        # Auth middleware (protects /todo, /diary_notes, and related APIs)
 │   ├── pages/              # Route pages
-│   │   ├── api/            # REST API endpoints (auth + todo CRUD)
+│   │   ├── api/            # REST API endpoints (auth + todo CRUD + diary tasks)
 │   │   ├── blog/           # Blog list and post pages
 │   │   ├── categories/     # Category pages (two-level hierarchy)
+│   │   ├── diary_notes/    # Diary pages (SSR, auth required)
 │   │   ├── tags/           # Tag pages
 │   │   ├── archives/       # Archives page
 │   │   ├── projects/       # Projects showcase
