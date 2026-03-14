@@ -1,0 +1,90 @@
+---
+import { Paginator, PostPreview } from 'astro-pure/components/pages'
+import { getBlogCollection, getUniqueTagsWithCount, sortMDByDate } from 'astro-pure/server'
+import { Button, Icon } from 'astro-pure/user'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import config from '@/site-config'
+
+export const prerender = false
+
+const pageParam = Astro.params.page
+const currentPage = pageParam ? parseInt(pageParam) : 1
+if (isNaN(currentPage) || currentPage < 1) return Astro.redirect('/diary_notes')
+
+const allPosts = sortMDByDate(await getBlogCollection('diary'))
+const uniqueTags = getUniqueTagsWithCount(allPosts).map(([tag]) => tag)
+const collectionsCount = allPosts.length
+const pageSize = config.content.blogPageSize || 8
+const totalPages = Math.ceil(allPosts.length / pageSize)
+
+if (currentPage > totalPages && totalPages > 0) return Astro.redirect('/diary_notes')
+
+const start = (currentPage - 1) * pageSize
+const pagePosts = allPosts.slice(start, start + pageSize)
+
+const meta = {
+  description: 'My personal diary entries',
+  title: 'Diary'
+}
+
+const prevUrl = currentPage > 1
+  ? { text: '← Previous', url: currentPage === 2 ? '/diary_notes' : `/diary_notes/${currentPage - 1}` }
+  : undefined
+const nextUrl = currentPage < totalPages
+  ? { text: 'Next →', url: `/diary_notes/${currentPage + 1}` }
+  : undefined
+---
+
+<PageLayout {meta}>
+  <Button title='Back' href='/todo' variant='back' />
+  <main class='mt-6 lg:mt-10'>
+    <div id='content-header' class='animate'>
+      <h1 class='mb-6 mt-6 text-3xl font-medium sm:mt-10'>Diary</h1>
+    </div>
+    {
+      pagePosts.length === 0 ? (
+        <p>No diary entries yet.</p>
+      ) : (
+        <div class='grid gap-y-16 sm:grid-cols-[3fr_1fr] sm:gap-x-8'>
+          <section aria-label='Diary entries list' class='animate' id='content'>
+            <div class='mb-3 flex flex-col justify-between text-sm sm:mb-5 sm:flex-row'>
+              <span class='text-muted-foreground'>
+                Page {currentPage} - Showing {pagePosts.length} of {collectionsCount} entries
+              </span>
+              <a aria-label='View all diary entries by years' href='/diary_notes/archives' data-astro-prefetch>
+                View all entries by years →
+              </a>
+            </div>
+            <ul class='flex flex-col gap-y-4 text-start'>
+              {pagePosts.map((post) => (
+                <PostPreview post={post} detailed basePath='/diary_notes' />
+              ))}
+            </ul>
+            <Paginator {...{ prevUrl, nextUrl }} />
+          </section>
+
+          {!!uniqueTags.length && (
+            <aside class='animate' id='sidebar'>
+              <h2 class='mb-4 flex items-center text-lg font-medium'>
+                <Icon name='tag-2' class='me-2' />
+                Tags
+              </h2>
+              <ul class='text-bgColor flex flex-wrap gap-2'>
+                {uniqueTags.slice(0, 50).map((tag) => (
+                  <li>
+                    <Button title={tag} href={`/diary_notes/tags/${tag}`} variant='pill' />
+                  </li>
+                ))}
+              </ul>
+              <span class='mt-4 block sm:text-end'>
+                <a aria-label='View all diary tags' href='/diary_notes/tags' data-astro-prefetch>
+                  View all →
+                </a>
+              </span>
+            </aside>
+          )}
+        </div>
+      )
+    }
+  </main>
+</PageLayout>
