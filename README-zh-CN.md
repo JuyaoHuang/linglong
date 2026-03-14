@@ -1,6 +1,6 @@
 # LingLong
 
-基于 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) 构建的个人博客站点，简洁、快速、功能丰富。
+个人博客站点，简洁、快速、功能丰富。
 
 [![GitHub deployments](https://img.shields.io/github/deployments/JuyaoHuang/lingLong/production?style=flat&logo=vercel&label=vercel)](https://www.juayohuang.top/)
 [![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?style=flat&logo=astro)](https://astro.build/)
@@ -26,6 +26,8 @@
 - **字数统计** — 文章列表卡片显示字数，替代估算阅读时间
 - **天气小部件** — 宽屏（>1400px）悬浮天气卡片；展示当前天气及未来 3 天预报，[Chart.js](https://www.chartjs.org/) 温度/降水量图表；自动定位并通过 [Nominatim](https://nominatim.org/) 逆地理编码显示真实城市名；逐时天气展开面板；支持明暗主题
 - **待办日历** — 密码保护的待办管理页，由 [Neon](https://neon.tech/) PostgreSQL 持久化；GitHub 风格 52 周贡献热力图、月历视图（蓝点标注到期日期）、滑出式 CRUD 面板
+- **私密日记** — 密码保护的日记系统，与博客相同的渲染体验（列表、详情、标签、归档）；内容存储在[私有 git 子模块](https://github.com/JuyaoHuang/diary-notes)；可交互的任务复选框通过 Neon DB 持久化；SSR 渲染（内容不会作为静态 HTML 暴露）
+- **认证安全** — HMAC-SHA256 签名 token，2 小时过期；登录限速（每分钟 5 次，每小时 100 次）；保护待办、日记及相关 API 路由
 - **头像互动** — 鼠标悬停头像时指数加速旋转动画
 - **友情链接** — 带动态日志的友链页面
 - **项目展示** — 个人项目展示页
@@ -50,7 +52,7 @@
 | 部署 | [Vercel](https://vercel.com/) |
 | 包管理 | [Bun](https://bun.sh/) |
 | 主题包 | [astro-pure](https://www.npmjs.com/package/astro-pure) |
-| 数据库 | [Neon](https://neon.tech/) PostgreSQL（无服务器，用于待办） |
+| 数据库 | [Neon](https://neon.tech/) PostgreSQL（无服务器，用于待办 + 日记任务） |
 | 图表 | [Chart.js](https://www.chartjs.org/)（天气小部件） |
 
 ## 快速开始
@@ -99,14 +101,16 @@ bun preview
 │   │   └── ...             # 其他自定义组件
 │   ├── content/
 │   │   ├── blog/           # 博客文章（按 分类/子分类 组织）
+│   │   ├── diary_notes/    # 私密日记条目（git 子模块 → 私有仓库）
 │   │   └── docs/           # 文档内容
-│   ├── layouts/            # 页面布局
+│   ├── layouts/            # 页面布局（BlogPost、DiaryPost 等）
 │   ├── lib/                # 数据库连接辅助（Neon）
-│   ├── middleware.ts        # 认证中间件（保护 /todo 和 /api/todos 路由）
+│   ├── middleware.ts        # 认证中间件（保护 /todo、/diary_notes 及相关 API 路由）
 │   ├── pages/              # 路由页面
-│   │   ├── api/            # REST API 接口（认证 + 待办 CRUD）
+│   │   ├── api/            # REST API 接口（认证 + 待办 CRUD + 日记任务）
 │   │   ├── blog/           # 博客列表与详情
 │   │   ├── categories/     # 分类页（支持两级）
+│   │   ├── diary_notes/    # 日记页面（SSR，需登录）
 │   │   ├── tags/           # 标签页
 │   │   ├── archives/       # 归档页
 │   │   ├── projects/       # 项目展示
