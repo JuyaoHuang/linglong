@@ -5,11 +5,12 @@ import { verifyToken } from '@/utils/auth'
 export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname } = context.url
 
-  // Protect /todo (exact), /api/todos, and /diary_notes routes
+  // Protect /todo (exact), /api/todos, /api/diary-tasks, and /diary_notes routes
   // /todo/courses and /todo/schedule are public content pages
   const isProtected =
     pathname === '/todo' ||
     pathname.startsWith('/api/todos') ||
+    pathname.startsWith('/api/diary-tasks') ||
     pathname.startsWith('/diary_notes')
 
   // Don't protect auth routes

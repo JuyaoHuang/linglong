@@ -62,3 +62,65 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
 </PageLayout>
 
 {config.integ.mediumZoom.enable && <MediumZoom />}
+
+<script define:vars={{ diaryId: id }}>
+  // Interactive checkboxes with Neon DB persistence
+  document.addEventListener('DOMContentLoaded', async () => {
+    const checkboxes = document.querySelectorAll('.prose input[type="checkbox"]')
+    if (!checkboxes.length) return
+
+    // Load saved states from API
+    try {
+      const res = await fetch(`/api/diary-tasks?diary_id=${encodeURIComponent(diaryId)}`)
+      if (res.ok) {
+        const saved = await res.json()
+        checkboxes.forEach((cb, i) => {
+          if (saved[i] !== undefined) {
+            cb.checked = saved[i]
+            if (cb.checked) cb.closest('li')?.classList.add('task-done')
+          }
+        })
+      }
+    } catch {}
+
+    // Enable interaction
+    checkboxes.forEach((cb, i) => {
+      cb.removeAttribute('disabled')
+      cb.style.cursor = 'pointer'
+
+      cb.addEventListener('change', async () => {
+        if (cb.checked) {
+          cb.closest('li')?.classList.add('task-done')
+        } else {
+          cb.closest('li')?.classList.remove('task-done')
+        }
+
+        try {
+          await fetch('/api/diary-tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              diary_id: diaryId,
+              task_index: i,
+              checked: cb.checked
+            })
+          })
+        } catch {}
+      })
+    })
+  })
+</script>
+
+<style is:global>
+  .prose li.task-done {
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
+  .prose input[type="checkbox"] {
+    width: 1em;
+    height: 1em;
+    margin-right: 0.4em;
+    vertical-align: middle;
+    accent-color: hsl(var(--primary));
+  }
+</style>
