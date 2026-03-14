@@ -3,8 +3,8 @@
 
 const TOKEN_MAX_AGE = 7200 // 2 hours in seconds
 
-function base64urlEncode(buffer: ArrayBuffer): string {
-  const bytes = new Uint8Array(buffer)
+function base64urlEncode(data: Uint8Array | ArrayBuffer): string {
+  const bytes = data instanceof Uint8Array ? data : new Uint8Array(data)
   let binary = ''
   for (const byte of bytes) {
     binary += String.fromCharCode(byte)
@@ -12,14 +12,14 @@ function base64urlEncode(buffer: ArrayBuffer): string {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 }
 
-function base64urlDecode(str: string): Uint8Array {
+function base64urlDecode(str: string): ArrayBuffer {
   const padded = str.replace(/-/g, '+').replace(/_/g, '/') + '=='.slice(0, (4 - (str.length % 4)) % 4)
   const binary = atob(padded)
   const bytes = new Uint8Array(binary.length)
   for (let i = 0; i < binary.length; i++) {
     bytes[i] = binary.charCodeAt(i)
   }
-  return bytes
+  return bytes.buffer as ArrayBuffer
 }
 
 async function getKey(secret: string): Promise<CryptoKey> {
