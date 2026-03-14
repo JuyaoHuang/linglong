@@ -22,6 +22,10 @@ export const prerender = false
         <div class="nav-card-title">课表</div>
         <div class="nav-card-desc">每周课程时间安排</div>
       </a>
+      <a href="/diary_notes" class="nav-card">
+        <div class="nav-card-title">日记本</div>
+        <div class="nav-card-desc">个人日记（私密）</div>
+      </a>
     </section>
 
     <section class="chart-section">
@@ -47,7 +51,7 @@ export const prerender = false
   }
   .nav-cards {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.75rem;
     margin-bottom: 1.5rem;
   }

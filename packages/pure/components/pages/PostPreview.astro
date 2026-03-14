@@ -8,10 +8,11 @@ import { Button, FormattedDate, Icon } from '../user'
 type Props<T extends CollectionKey> = {
   post: CollectionEntry<T>
   detailed?: boolean
+  basePath?: string
   class?: string
 }
 
-const { post, detailed = false, class: className } = Astro.props
+const { post, detailed = false, basePath = '/blog', class: className } = Astro.props
 const { id, data } = post
 const { remarkPluginFrontmatter } = await render(post)
 const postDate = data.updatedDate ?? data.publishDate
@@ -30,7 +31,7 @@ const postDate = data.updatedDate ?? data.publishDate
       detailed && 'max-sm:px-4 sm:py-5',
       detailed && data.heroImage && 'max-md:pt-24'
     )}
-    href={`/blog/${id}`}
+    href={`${basePath}/${id}`}
     data-astro-prefetch
   >
     {
@@ -108,7 +109,7 @@ const postDate = data.updatedDate ?? data.publishDate
                 <ul class='tag-list mt-1 flex gap-2'>
                   {data.tags.map((tag: string) => (
                     <li>
-                      <Button as='a' title={tag} href={`/tags/${tag}`} variant='pill' />
+                      <Button as='a' title={tag} href={`${basePath}/tags/${tag}`} variant='pill' />
                     </li>
                   ))}
                 </ul>
