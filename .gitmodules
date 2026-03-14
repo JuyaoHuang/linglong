@@ -1,3 +1,6 @@
 [submodule "src/content/blog"]
 	path = src/content/blog
 	url = https://github.com/JuyaoHuang/blogs.git
+[submodule "src/content/diary_notes"]
+	path = src/content/diary_notes
+	url = https://github.com/JuyaoHuang/diary-notes.git
