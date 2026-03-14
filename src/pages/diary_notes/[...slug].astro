@@ -12,10 +12,11 @@ export const prerender = false
 
 const { slug } = Astro.params
 
-// Determine if this is a list page (empty or numeric) or a detail page
-const isListPage = !slug || /^\d+$/.test(slug)
-
 const allPosts = sortMDByDate(await getBlogCollection('diary')) as CollectionEntry<'diary'>[]
+
+// Check if slug matches a post ID first, then fall back to pagination
+const matchedPost = slug ? allPosts.find((p) => p.id === slug) : undefined
+const isListPage = !matchedPost && (!slug || /^\d+$/.test(slug))
 
 // --- Detail page ---
 let post: CollectionEntry<'diary'> | undefined
@@ -24,7 +25,7 @@ let headings: any[] = []
 let remarkPluginFrontmatter: Record<string, unknown> = {}
 
 if (!isListPage) {
-  post = allPosts.find((p) => p.id === slug)
+  post = matchedPost
   if (!post) return Astro.redirect('/diary_notes')
   const rendered = await render(post)
   Content = rendered.Content
