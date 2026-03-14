@@ -1,18 +1,8 @@
 import type { APIRoute } from 'astro'
 
-export const prerender = false
+import { generateToken } from '@/utils/auth'
 
-function generateToken(password: string): string {
-  const timestamp = Date.now().toString(36)
-  const data = `${timestamp}:${password}`
-  // Simple hash for session token
-  let hash = 0
-  for (let i = 0; i < data.length; i++) {
-    const char = data.charCodeAt(i)
-    hash = ((hash << 5) - hash + char) | 0
-  }
-  return `${timestamp}.${Math.abs(hash).toString(36)}`
-}
+export const prerender = false
 
 export const POST: APIRoute = async ({ request }) => {
   const body = await request.json().catch(() => null)
@@ -38,8 +28,8 @@ export const POST: APIRoute = async ({ request }) => {
     })
   }
 
-  const token = generateToken(adminPassword)
-  const maxAge = 7 * 24 * 60 * 60 // 7 days
+  const token = await generateToken(adminPassword)
+  const maxAge = 7200 // 2 hours
 
   return new Response(JSON.stringify({ success: true }), {
     status: 200,
