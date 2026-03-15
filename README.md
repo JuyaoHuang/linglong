@@ -27,6 +27,7 @@ A personal blog site — clean, fast, and feature-rich.
 - **Weather widget** — Floating card on wide screens (>1400px); current conditions + 3-day forecast with [Chart.js](https://www.chartjs.org/) temperature/precipitation chart; auto-geolocation with [Nominatim](https://nominatim.org/) reverse geocoding; hourly detail panel; dark/light mode support
 - **Todo calendar** — Password-protected todo management page backed by [Neon](https://neon.tech/) PostgreSQL; GitHub-style 52-week contribution heatmap, monthly calendar with due-date markers, slide-in CRUD panel
 - **Private diary** — Password-protected diary system with blog-like rendering (list, detail, tags, archives); content stored in a [private git submodule](https://github.com/JuyaoHuang/diary-notes); interactive task checkboxes with Neon DB persistence; SSR-only (content never exposed as static HTML)
+- **Diary-to-todo sync** — Automatically extracts checkbox items from diary `## today tasks` sections during build and inserts them into the todo calendar; idempotent with `ON CONFLICT DO NOTHING` dedup
 - **Authentication** — HMAC-SHA256 signed tokens with 2-hour expiry; login rate limiting (5/min, 100/hour per IP); protects todo, diary, and related API routes
 - **Avatar interaction** — Exponential spin animation on avatar hover
 - **Friend links** — Links page with an activity logbook
@@ -105,6 +106,7 @@ bun preview
 │   │   └── docs/           # Documentation content
 │   ├── layouts/            # Page layouts (BlogPost, DiaryPost, etc.)
 │   ├── lib/                # Database helpers (Neon connection)
+│   ├── integrations/       # Custom Astro integrations (diary-todo-sync)
 │   ├── middleware.ts        # Auth middleware (protects /todo, /diary_notes, and related APIs)
 │   ├── pages/              # Route pages
 │   │   ├── api/            # REST API endpoints (auth + todo CRUD + diary tasks)

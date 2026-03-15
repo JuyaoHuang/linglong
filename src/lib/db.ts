@@ -15,6 +15,8 @@ export function getDb() {
 //   content TEXT DEFAULT '',
 //   completed BOOLEAN DEFAULT false,
 //   due_date DATE,
+//   source TEXT DEFAULT 'manual',
 //   created_at TIMESTAMPTZ DEFAULT NOW(),
-//   updated_at TIMESTAMPTZ DEFAULT NOW()
+//   updated_at TIMESTAMPTZ DEFAULT NOW(),
+//   UNIQUE (title, due_date)
 // );
