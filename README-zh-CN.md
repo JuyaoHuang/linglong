@@ -27,6 +27,7 @@
 - **天气小部件** — 宽屏（>1400px）悬浮天气卡片；展示当前天气及未来 3 天预报，[Chart.js](https://www.chartjs.org/) 温度/降水量图表；自动定位并通过 [Nominatim](https://nominatim.org/) 逆地理编码显示真实城市名；逐时天气展开面板；支持明暗主题
 - **待办日历** — 密码保护的待办管理页，由 [Neon](https://neon.tech/) PostgreSQL 持久化；GitHub 风格 52 周贡献热力图、月历视图（蓝点标注到期日期）、滑出式 CRUD 面板
 - **私密日记** — 密码保护的日记系统，与博客相同的渲染体验（列表、详情、标签、归档）；内容存储在[私有 git 子模块](https://github.com/JuyaoHuang/diary-notes)；可交互的任务复选框通过 Neon DB 持久化；SSR 渲染（内容不会作为静态 HTML 暴露）
+- **日记待办同步** — 构建时自动从日记 `## today tasks` 部分提取复选框项目并插入待办日历；通过 `ON CONFLICT DO NOTHING` 实现幂等去重
 - **认证安全** — HMAC-SHA256 签名 token，2 小时过期；登录限速（每分钟 5 次，每小时 100 次）；保护待办、日记及相关 API 路由
 - **头像互动** — 鼠标悬停头像时指数加速旋转动画
 - **友情链接** — 带动态日志的友链页面
@@ -105,6 +106,7 @@ bun preview
 │   │   └── docs/           # 文档内容
 │   ├── layouts/            # 页面布局（BlogPost、DiaryPost 等）
 │   ├── lib/                # 数据库连接辅助（Neon）
+│   ├── integrations/       # 自定义 Astro 集成（日记待办同步）
 │   ├── middleware.ts        # 认证中间件（保护 /todo、/diary_notes 及相关 API 路由）
 │   ├── pages/              # 路由页面
 │   │   ├── api/            # REST API 接口（认证 + 待办 CRUD + 日记任务）

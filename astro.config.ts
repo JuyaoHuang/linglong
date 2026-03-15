@@ -25,6 +25,7 @@ import {
   transformerRemoveNotationEscape
 } from './src/plugins/shiki-official/transformers.ts'
 import config from './src/site.config.ts'
+import diaryTodoSync from './src/integrations/diary-todo-sync'
 
 // https://astro.build/config
 export default defineConfig({
@@ -110,7 +111,8 @@ export default defineConfig({
     // astro-pure will automatically add sitemap, mdx & unocss
     // sitemap(),
     // mdx(),
-    AstroPureIntegration(config)
+    AstroPureIntegration(config),
+    diaryTodoSync()
   ],
 
   // [Experimental]
