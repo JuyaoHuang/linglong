@@ -5,8 +5,8 @@ import { neon } from '@neondatabase/serverless'
 import { extractTodosFromMarkdown } from '../utils/diary-todo-extract'
 
 /**
- * Parse frontmatter from markdown content without external dependencies.
- * Extracts key-value pairs from the YAML frontmatter block (--- delimited).
+*从 Markdown 内容中解析 frontmatter，无需外部依赖。
+ *从 YAML frontmatter 块中提取键值对（---分隔）。
  */
 function parseFrontmatter(content: string): { data: Record<string, string>; body: string } {
   const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
@@ -21,16 +21,16 @@ function parseFrontmatter(content: string): { data: Record<string, string>; body
 }
 
 /**
- * Astro integration that syncs diary todo items to the todos database table.
+ * Astro 集成将日记待办事项同步到待办事项数据库表。
  *
- * Runs at astro:build:done. Reads raw markdown files from the diary_notes
- * content directory, extracts checkbox items under "## today tasks" sections,
- * and inserts them into the Neon todos table with ON CONFLICT DO NOTHING
- * for idempotent builds.
+ * 运行于 astro:build:done。从 diary_notes 读取原始 Markdown 文件
+ * 内容目录，提取“## 今天任务”部分下的复选框项目，
+ * 并将它们插入到 Neon todos 表中，并使用 ON CONFLICT DO NOTHING
+ * 用于幂等构建。
  *
- * Uses process.env.DATABASE_URL directly (not getDb() from src/lib/db.ts)
- * because Astro integration hooks run in raw Node.js context where Vite's
- * import.meta.env is not available.
+ * 直接使用 process.env.DATABASE_URL （不是 src/lib/db.ts 中的 getDb() ）
+ * 因为 Astro 集成钩子在原始 Node.js 上下文中运行，其中 Vite 的
+ * import.meta.env 不可用。
  */
 export default function diaryTodoSync(): AstroIntegration {
   return {

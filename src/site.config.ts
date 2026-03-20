@@ -120,8 +120,8 @@ export const integ: IntegrationUserConfig = {
     applyTip: [
       { name: 'Name', val: theme.title },
       { name: 'Desc', val: theme.description || 'Null' },
-      { name: 'Link', val: 'https://www.juayohuang.top' },
-      { name: 'Avatar', val: 'https://www.juayohuang.top' }
+      { name: 'Link', val: 'https://www.juyaohuang.com' },
+      { name: 'Avatar', val: 'https://www.juyaohuang.com' }
     ],
     // Cache avatars in `public/avatars/` to improve user experience.
     // 是否缓存友链头像到本地
@@ -183,7 +183,7 @@ export const integ: IntegrationUserConfig = {
     enable: true, // 启用/禁用
     // Server service link
     // Waline 服务器地址
-    server: 'https://waline.juayohuang.top/',
+    server: 'https://waline.juyaohuang.com/',
     // Show meta info for comments
     // 是否显示评论元信息
     showMeta: false,

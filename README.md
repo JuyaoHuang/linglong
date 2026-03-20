@@ -2,7 +2,7 @@
 
 A personal blog site — clean, fast, and feature-rich.
 
-[![GitHub deployments](https://img.shields.io/github/deployments/JuyaoHuang/lingLong/production?style=flat&logo=vercel&label=vercel)](https://www.juayohuang.top/)
+[![GitHub deployments](https://img.shields.io/github/deployments/JuyaoHuang/lingLong/production?style=flat&logo=vercel&label=vercel)](https://www.juyaohuang.com/)
 [![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?style=flat&logo=astro)](https://astro.build/)
 [![License](https://img.shields.io/github/license/JuyaoHuang/lingLong?style=flat)](./LICENSE)
 

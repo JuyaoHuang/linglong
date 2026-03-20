@@ -30,7 +30,7 @@ import diaryTodoSync from './src/integrations/diary-todo-sync'
 // https://astro.build/config
 export default defineConfig({
   // [Basic]
-  site: 'https://www.juayohuang.top',
+  site: 'https://www.juyaohuang.com',
   // Deploy to a sub path
   // https://astro-pure.js.org/docs/setup/deployment#platform-with-base-path
   // base: '/astro-pure/',
