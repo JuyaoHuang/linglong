@@ -1,7 +1,7 @@
 // HMAC-SHA256 token utilities for authentication
 // Uses Web Crypto API — works in Vercel Edge/Serverless and Astro SSR
 
-const TOKEN_MAX_AGE = 7200 // 2 hours in seconds
+const TOKEN_MAX_AGE = 4 * 3600 // 4 hours in seconds
 
 function base64urlEncode(data: Uint8Array | ArrayBuffer): string {
   const bytes = data instanceof Uint8Array ? data : new Uint8Array(data)
