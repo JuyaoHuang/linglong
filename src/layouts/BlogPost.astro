@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content'
 
 // Plugin styles
 import 'katex/dist/katex.min.css'
+import 'lxgw-wenkai-lite-webfont/style.css'
 
 import { MediumZoom } from 'astro-pure/advanced'
 import { ArticleBottom, Copyright, Hero, TOC } from 'astro-pure/components/pages'
@@ -42,6 +43,7 @@ const socialImage = heroImage
   : config.socialCard
 const articleDate = updatedDate?.toISOString() ?? publishDate.toISOString()
 const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-text-opacity))'
+const isPoetrySharePost = data.first_level_category === '诗词分享'
 ---
 
 <PageLayout
@@ -57,7 +59,9 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
     </Fragment>
   </Hero>
 
-  <slot />
+  <div class={isPoetrySharePost ? 'blog-poetry-content' : undefined}>
+    <slot />
+  </div>
 
   <Fragment slot='bottom'>
     {/* Copyright */}
@@ -72,3 +76,10 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
 </PageLayout>
 
 {config.integ.mediumZoom.enable && <MediumZoom />}
+
+<style is:global>
+  .prose .blog-poetry-content,
+  .prose .blog-poetry-content * {
+    font-family: 'LXGW WenKai Lite', sans-serif;
+  }
+</style>
