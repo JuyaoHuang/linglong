@@ -4,13 +4,13 @@ export interface ExtractedTodo {
 }
 
 /**
- * Extract todo items from diary markdown content.
- * Looks for a "## today tasks" or "**today tasks**" section,
- * then extracts all checkbox items (- [ ] / - [x]) below it.
+*从日记 Markdown 内容中提取待办事项。
+ *查找“## 今天任务”或“**今天任务**”部分，
+ *然后提取其下方的所有复选框项目 (-[ ] /-[x])。
  */
 export function extractTodosFromMarkdown(markdown: string): ExtractedTodo[] {
   // Match either ## today tasks (H2) or **today tasks** (bold)
-  const sectionRegex = /^(?:## today tasks|(?:\*\*today tasks\*\*))\s*$/im
+  const sectionRegex = /^(?:## today tasks|(?:\*\*today tasks\*\*)|## 行程安排)\s*$/im
   const match = markdown.match(sectionRegex)
   if (!match || match.index === undefined) return []
 
