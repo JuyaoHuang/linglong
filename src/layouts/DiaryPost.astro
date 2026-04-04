@@ -4,7 +4,7 @@ import type { CollectionEntry } from 'astro:content'
 
 // Plugin styles
 import 'katex/dist/katex.min.css'
-import 'lxgw-wenkai-lite-webfont/style.css'
+import 'lxgw-wenkai-screen-webfont/style.css'
 
 import { MediumZoom } from 'astro-pure/advanced'
 import { ArticleBottom, TOC } from 'astro-pure/components/pages'
@@ -113,9 +113,9 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
 </script>
 
 <style is:global>
-  .prose .diary-poetry-section,
-  .prose .diary-poetry-section * {
-    font-family: 'LXGW WenKai Lite', sans-serif;
+  .prose,
+  .prose * {
+    font-family: 'LXGW WenKai Screen', sans-serif;
   }
 
   .prose li.task-done {
