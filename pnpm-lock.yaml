@@ -41,7 +41,7 @@ importers:
       katex:
         specifier: ^0.16.27
         version: 0.16.27
-      lxgw-wenkai-lite-webfont:
+      lxgw-wenkai-screen-webfont:
         specifier: ^1.7.0
         version: 1.7.0
       mermaid:
@@ -2422,8 +2422,8 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
-  lxgw-wenkai-lite-webfont@1.7.0:
-    resolution: {integrity: sha512-VcQYNRpdXAxaZsJ18rfT1mmAreGqkIFNZ/9pdVLbT2Tkb+2lLWJDXq4zYxMEk9AcecSnxO31R2LHh5ieLlxjRg==}
+  lxgw-wenkai-screen-webfont@1.7.0:
+    resolution: {integrity: sha512-xvfF4V26Mb335xKg3uxljz+V2nq4F5ek0ku9pmyKgT0Dzo/d2rHi7WpnqgvM9mlXAcAKOrxrcDmUZiIs/ZQ9bQ==}
 
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
@@ -6266,7 +6266,7 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
-  lxgw-wenkai-lite-webfont@1.7.0: {}
+  lxgw-wenkai-screen-webfont@1.7.0: {}
 
   magic-string@0.30.21:
     dependencies:

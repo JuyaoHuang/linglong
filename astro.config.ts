@@ -11,7 +11,6 @@ import remarkGfm from 'remark-gfm'
 // npm install astro-mermaid mermaid --registry=https://registry.npmmirror.com/
 // Local integrations
 import rehypeAutolinkHeadings from './src/plugins/rehype-auto-link-headings.ts'
-import rehypeDiaryPoetrySections from './src/plugins/rehype-diary-poetry-sections.ts'
 // Shiki
 import {
   addCollapse,
@@ -62,7 +61,6 @@ export default defineConfig({
     rehypePlugins: [
       [rehypeKatex, {}],
       rehypeHeadingIds,
-      rehypeDiaryPoetrySections,
       [
         rehypeAutolinkHeadings,
         {
