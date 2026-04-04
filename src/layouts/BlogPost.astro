@@ -4,7 +4,7 @@ import type { CollectionEntry } from 'astro:content'
 
 // Plugin styles
 import 'katex/dist/katex.min.css'
-import 'lxgw-wenkai-lite-webfont/style.css'
+import 'lxgw-wenkai-screen-webfont/style.css'
 
 import { MediumZoom } from 'astro-pure/advanced'
 import { ArticleBottom, Copyright, Hero, TOC } from 'astro-pure/components/pages'
@@ -80,6 +80,6 @@ const isPoetrySharePost = data.first_level_category === '诗词分享'
 <style is:global>
   .prose .blog-poetry-content,
   .prose .blog-poetry-content * {
-    font-family: 'LXGW WenKai Lite', sans-serif;
+    font-family: 'LXGW WenKai Screen', sans-serif;
   }
 </style>
