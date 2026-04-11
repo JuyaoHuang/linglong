@@ -33,6 +33,7 @@
     "chart.js": "^4.5.1",
     "katex": "^0.16.27",
     "lxgw-wenkai-screen-webfont": "^1.7.0",
+    "mdast-util-find-and-replace": "^3.0.2",
     "mermaid": "^11.12.2",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
