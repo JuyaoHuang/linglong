@@ -270,6 +270,44 @@ span.katex-display {
   }
 }
 
+/* [Colored Text] */
+:root {
+  --ct-red: #EF4444;
+  --ct-blue: #3B82F6;
+  --ct-green: #22C55E;
+  --ct-yel: #EAB308;
+  --ct-pur: #A855F7;
+  --ct-gray: #6B7280;
+  --ct-pink: #F472B6;
+  --ct-emer: #10B981;
+  --ct-rose: #FB7185;
+  --ct-vio: #A78BFA;
+}
+.dark {
+  --ct-red: #F87171;
+  --ct-blue: #60A5FA;
+  --ct-green: #4ADE80;
+  --ct-yel: #FACC15;
+  --ct-pur: #C084FC;
+  --ct-gray: #9CA3AF;
+  --ct-pink: #F9A8D4;
+  --ct-emer: #34D399;
+  --ct-rose: #FDA4AF;
+  --ct-vio: #C4B5FD;
+}
+.ct-red { color: var(--ct-red) !important; }
+.ct-blue { color: var(--ct-blue) !important; }
+.ct-green { color: var(--ct-green) !important; }
+.ct-yel { color: var(--ct-yel) !important; }
+.ct-pur { color: var(--ct-pur) !important; }
+.ct-gray { color: var(--ct-gray) !important; }
+.ct-pink { color: var(--ct-pink) !important; }
+.ct-emer { color: var(--ct-emer) !important; }
+.ct-rose { color: var(--ct-rose) !important; }
+.ct-vio { color: var(--ct-vio) !important; }
+/* Force child elements (strong, em, a, etc.) to inherit colored text */
+[class^="ct-"] * { color: inherit !important; }
+
 /* Scroll bar */
 :root {
   --scrollbar-thumb: hsl(var(--muted-foreground) / var(--un-bg-opacity, 0.3));
