@@ -18,9 +18,24 @@ type Props = {
 
 const { stats } = Astro.props as Props
 
+async function fetchZhihuCount(username: string): Promise<number | undefined> {
+  const response = await fetch(
+    `https://www.zhihu.com/api/v4/members/${username}?include=follower_count`,
+    { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' } }
+  )
+  const data = await response.json()
+  return data.follower_count
+}
+
 async function fetchCount(item: SubstatsItem) {
   if (!item.api) return
   try {
+    // Use Zhihu's direct API to avoid Substats being blocked
+    if (item.api.startsWith('zhihu/')) {
+      const username = item.api.replace('zhihu/', '')
+      item.count = await fetchZhihuCount(username)
+      return
+    }
     const response = await fetch(`https://api.swo.moe/stats/${item.api}`)
     const data = await response.json()
     if (data.failed) {
